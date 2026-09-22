@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Bread - Bakery & Reservation</title>
+    <title>Daily Bread - Artisan Bakery & Pre-Order</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for double-size navigation icons -->
+    <!-- FontAwesome for navigation icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter & Playfair Display -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -30,18 +28,27 @@
                         }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif']
+                        sans: [
+                            '-apple-system',
+                            'BlinkMacSystemFont',
+                            '"SF Pro Display"',
+                            '"SF Pro Text"',
+                            '"SF Pro"',
+                            'Segoe UI',
+                            'Roboto',
+                            'Helvetica',
+                            'Arial',
+                            'sans-serif'
+                        ]
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Custom scrollbar for clean appearance */
         ::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
+            width: 5px;
+            height: 5px;
         }
         ::-webkit-scrollbar-track {
             background: #fffbf7;
@@ -51,209 +58,179 @@
             border-radius: 4px;
         }
         body {
-            background-color: #26160e;
-            font-family: 'Inter', sans-serif;
+            background-color: #1a0f0a;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-size: 16px;
+            color: #40180c;
         }
         .phone-frame {
-            box-shadow: 0 25px 60px -15px rgba(220, 97, 27, 0.3), 0 0 0 12px #180d08, 0 0 0 14px #40180c;
+            box-shadow: 0 25px 60px -15px rgba(220, 97, 27, 0.4), 0 0 0 10px #120905, 0 0 0 12px #3d160a;
+        }
+        .safe-text-wrap {
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-0 sm:p-4">
 
-    <!-- iPhone Simulator Container -->
-    <div class="w-full sm:w-[414px] h-screen sm:h-[844px] bg-bakery-50 text-bakery-950 flex flex-col relative overflow-hidden sm:rounded-[48px] phone-frame">
+    <!-- iPhone Mockup Container (No Status Bar / Notch at Top) -->
+    <div class="w-full sm:w-[420px] h-screen sm:h-[915px] bg-bakery-50 text-bakery-950 flex flex-col relative overflow-hidden sm:rounded-[48px] phone-frame">
         
-        <!-- Top Status Bar -->
-        <div class="bg-bakery-950 text-bakery-100 px-6 py-3 flex justify-between items-center text-xs shrink-0 select-none z-30">
-            <span id="current-time" class="font-semibold tracking-wider">09:41</span>
-            <!-- Notch Speaker Simulation -->
-            <div class="w-20 h-4 bg-black rounded-full absolute left-1/2 transform -translate-x-1/2 top-2 hidden sm:block"></div>
-            <div class="flex items-center space-x-2 text-bakery-300">
-                <i class="fa-solid fa-signal text-[10px]"></i>
-                <i class="fa-solid fa-wifi text-[10px]"></i>
-                <i class="fa-solid fa-battery-full text-xs text-bakery-400"></i>
-            </div>
-        </div>
-
         <!-- App Header Bar -->
         <header class="bg-gradient-to-r from-bakery-900 via-bakery-800 to-bakery-700 text-bakery-50 px-5 py-4 flex items-center justify-between shrink-0 shadow-md z-20">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-2xl bg-bakery-500/20 flex items-center justify-center border border-bakery-400/40 text-bakery-300 shadow-inner">
+                <div class="w-11 h-11 rounded-2xl bg-bakery-500/20 flex items-center justify-center border border-bakery-400/30 text-bakery-300 shadow-inner">
                     <i class="fa-solid fa-wheat-awn text-lg"></i>
                 </div>
                 <div>
-                    <h1 class="font-serif font-bold text-lg tracking-wide text-bakery-100">Daily Bread</h1>
-                    <p class="text-[11px] text-bakery-300 uppercase tracking-widest font-medium">Artisan Bakery & Pre-Order</p>
+                    <h1 class="font-extrabold text-lg tracking-tight text-bakery-100 leading-tight">Daily Bread</h1>
+                    <p class="text-[11px] text-bakery-300 uppercase tracking-wider font-extrabold">Artisan Bakery</p>
                 </div>
             </div>
-            <div class="flex items-center space-x-2">
-                <button onclick="openOrderModal()" class="bg-bakery-500 text-white px-3.5 py-2 rounded-xl font-semibold text-xs shadow-md hover:bg-bakery-600 transition flex items-center space-x-1.5 active:scale-95">
-                    <i class="fa-solid fa-plus text-xs"></i>
-                    <span>Pesanan</span>
-                </button>
-            </div>
+            <button onclick="openOrderModal()" class="bg-bakery-500 text-white px-3.5 py-2 rounded-xl font-bold text-xs shadow-md hover:bg-bakery-600 transition flex items-center space-x-1.5 active:scale-95 shrink-0">
+                <i class="fa-solid fa-plus text-[10px]"></i>
+                <span>Pesanan</span>
+            </button>
         </header>
 
         <!-- Main Scrollable Content Area -->
-        <main id="main-content" class="flex-1 overflow-y-auto pb-28 relative">
+        <main id="main-content" class="flex-1 overflow-y-auto pb-32 relative">
             
-            <!-- TAB 1: Pesanan 7 Hari Kedepan -->
+            <!-- TAB 1: HOME (7-Day Schedule) -->
             <div id="tab-1" class="tab-pane p-4 space-y-4">
-                <div class="bg-gradient-to-br from-white to-bakery-100 p-4 rounded-2xl shadow-sm border border-bakery-200 flex justify-between items-center">
+                <div class="bg-gradient-to-br from-white to-bakery-100 p-4.5 rounded-2xl shadow-sm border border-bakery-200 flex justify-between items-center">
                     <div>
-                        <span class="text-[10px] bg-bakery-200 text-bakery-800 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider">Jadwal Aktif</span>
-                        <h2 class="font-serif font-bold text-bakery-950 text-base mt-1">7 Hari Kedepan</h2>
-                        <p class="text-xs text-bakery-700 mt-0.5">Daftar pesanan pre-order berurutan</p>
+                        <span class="text-[10px] bg-bakery-200 text-bakery-950 px-2.5 py-0.5 rounded font-extrabold uppercase tracking-wider">Jadwal Aktif</span>
+                        <h2 class="font-extrabold text-bakery-950 text-lg mt-1 tracking-tight">7 Hari Kedepan</h2>
+                        <p class="text-[11px] text-bakery-800 font-semibold mt-0.5">Urutan kronologis pre-order</p>
                     </div>
-                    <button onclick="openOrderModal()" class="bg-bakery-500 hover:bg-bakery-600 text-white px-3 py-2 rounded-xl text-xs font-semibold shadow transition flex items-center space-x-1">
+                    <button onclick="openOrderModal()" class="bg-bakery-500 hover:bg-bakery-600 text-white px-3 py-2 rounded-xl text-xs font-bold shadow transition flex items-center space-x-1 shrink-0">
                         <i class="fa-solid fa-plus"></i>
-                        <span>Buat Pesanan</span>
+                        <span>Buat</span>
                     </button>
                 </div>
 
-                <!-- Quick Filter Buttons -->
-                <div class="flex space-x-2 overflow-x-auto pb-1 text-xs">
-                    <button onclick="filterWeekOrders('all')" class="week-filter-btn px-3.5 py-1.5 rounded-xl bg-bakery-800 text-white font-medium shrink-0 transition shadow-sm">Semua (7 Hari)</button>
-                    <button onclick="filterWeekOrders('today')" class="week-filter-btn px-3.5 py-1.5 rounded-xl bg-white text-bakery-800 border border-bakery-200 font-medium shrink-0 transition shadow-sm">Hari Ini</button>
-                    <button onclick="filterWeekOrders('pending')" class="week-filter-btn px-3.5 py-1.5 rounded-xl bg-white text-bakery-800 border border-bakery-200 font-medium shrink-0 transition shadow-sm">Belum Selesai</button>
-                </div>
-
-                <!-- Continuous 7-Day Order List -->
-                <div id="seven-day-list" class="space-y-4">
-                    <!-- Dynamic populated via JS -->
+                <div id="seven-day-list" class="space-y-3.5">
+                    <!-- Populated via JS -->
                 </div>
             </div>
 
-            <!-- TAB 2: Semua Booking -->
+            <!-- TAB 2: BOOKING -->
             <div id="tab-2" class="tab-pane p-4 space-y-4 hidden">
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-bakery-200 space-y-3">
+                <div class="bg-white p-4.5 rounded-2xl shadow-sm border border-bakery-200 space-y-3">
                     <div class="flex justify-between items-center">
-                        <h2 class="font-serif font-bold text-bakery-950 text-base">Arsip Semua Booking</h2>
-                        <span id="total-bookings-count" class="text-xs bg-bakery-100 text-bakery-800 px-2.5 py-1 rounded-full font-semibold">0 Pesanan</span>
+                        <h2 class="font-extrabold text-bakery-950 text-lg tracking-tight">Arsip Semua Booking</h2>
+                        <span id="total-bookings-count" class="text-[11px] bg-bakery-100 text-bakery-900 px-2.5 py-1 rounded-full font-extrabold">0 Pesanan</span>
                     </div>
                     <div class="relative">
-                        <i class="fa-solid fa-search absolute left-3.5 top-3 text-bakery-400 text-xs"></i>
-                        <input type="text" id="search-booking-input" oninput="renderBookingsList()" placeholder="Cari nama pemesan atau kue..." class="w-full bg-bakery-50 border border-bakery-200 rounded-xl pl-9 pr-4 py-2 text-xs focus:outline-none focus:border-bakery-500 text-bakery-950">
+                        <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-bakery-400 text-xs"></i>
+                        <input type="text" id="search-booking-input" oninput="renderBookingsList()" placeholder="Cari nama pemesan atau produk..." class="w-full bg-bakery-50 border border-bakery-200 rounded-xl pl-9 pr-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:border-bakery-500 text-bakery-950">
                     </div>
-                    <div class="flex space-x-2 pt-1 text-xs">
-                        <select id="status-filter-select" onchange="renderBookingsList()" class="bg-bakery-50 border border-bakery-200 rounded-xl px-3 py-2 text-xs flex-1 focus:outline-none text-bakery-950">
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <select id="status-filter-select" onchange="renderBookingsList()" class="bg-bakery-50 border border-bakery-200 rounded-xl px-3 py-2.5 font-bold focus:outline-none text-bakery-950 truncate">
                             <option value="all">Semua Status</option>
                             <option value="Pending">Pending</option>
                             <option value="Diproses">Diproses</option>
                             <option value="Selesai">Selesai</option>
                             <option value="Dibatalkan">Dibatalkan</option>
                         </select>
-                        <select id="payment-filter-select" onchange="renderBookingsList()" class="bg-bakery-50 border border-bakery-200 rounded-xl px-3 py-2 text-xs flex-1 focus:outline-none text-bakery-950">
+                        <select id="payment-filter-select" onchange="renderBookingsList()" class="bg-bakery-50 border border-bakery-200 rounded-xl px-3 py-2.5 font-bold focus:outline-none text-bakery-950 truncate">
                             <option value="all">Semua Pembayaran</option>
                             <option value="Lunas">Lunas</option>
-                            <option value="DP">DP (Uang Muka)</option>
+                            <option value="DP">DP</option>
                             <option value="Belum Bayar">Belum Bayar</option>
                         </select>
                     </div>
                 </div>
 
                 <div id="all-bookings-list" class="space-y-3">
-                    <!-- Dynamic populated via JS -->
+                    <!-- Populated via JS -->
                 </div>
             </div>
 
-            <!-- TAB 3: Profit & Loss -->
+            <!-- TAB 3: PROFIT & LOSS -->
             <div id="tab-3" class="tab-pane p-4 space-y-4 hidden">
-                <!-- Financial Header Card -->
-                <div class="bg-gradient-to-br from-bakery-900 via-bakery-800 to-bakery-950 text-bakery-50 p-5 rounded-3xl shadow-xl relative overflow-hidden border border-bakery-700/50">
-                    <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-bakery-500/15 rounded-full blur-xl pointer-events-none"></div>
+                <div class="bg-gradient-to-br from-bakery-900 via-bakery-800 to-bakery-950 text-bakery-50 p-5 rounded-2xl shadow-xl relative overflow-hidden border border-bakery-700/50">
+                    <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-bakery-500/15 rounded-full blur-xl pointer-events-none"></div>
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <span class="text-[10px] uppercase tracking-widest text-bakery-400 font-bold">Laporan Keuangan</span>
-                            <h2 class="font-serif font-bold text-lg text-white mt-0.5">Profit & Loss</h2>
+                            <span class="text-[10px] uppercase tracking-widest text-bakery-300 font-extrabold">Laporan Keuangan</span>
+                            <h2 class="font-extrabold text-xl text-white mt-0.5 tracking-tight">Profit & Loss</h2>
                         </div>
-                        <button onclick="togglePrivacyMode()" class="bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-xl text-xs text-bakery-300 flex items-center space-x-1.5 transition">
+                        <button onclick="togglePrivacyMode()" class="bg-white/15 hover:bg-white/25 px-3 py-1.5 rounded-xl text-xs font-bold text-bakery-200 flex items-center space-x-1.5 transition shrink-0">
                             <i id="privacy-icon" class="fa-solid fa-eye text-xs"></i>
-                            <span id="privacy-text" class="font-medium">Tampil</span>
+                            <span id="privacy-text">Tampil</span>
                         </button>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3 mb-4">
-                        <div class="bg-white/5 border border-white/10 p-3.5 rounded-2xl backdrop-blur-sm">
-                            <p class="text-[10px] text-bakery-300 uppercase font-medium">Total Omset</p>
-                            <p id="fin-total-revenue" class="font-bold text-sm text-white mt-1">Rp 0</p>
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div class="bg-white/5 border border-white/10 p-3.5 rounded-xl backdrop-blur-sm">
+                            <p class="text-[10px] text-bakery-300 uppercase font-extrabold truncate">Total Omset</p>
+                            <p id="fin-total-revenue" class="font-extrabold text-sm sm:text-base text-white mt-1 truncate">Rp 0</p>
                         </div>
-                        <div class="bg-white/5 border border-white/10 p-3.5 rounded-2xl backdrop-blur-sm">
-                            <p class="text-[10px] text-bakery-300 uppercase font-medium">Estimasi HPP</p>
-                            <p id="fin-total-hpp" class="font-bold text-sm text-orange-300 mt-1">Rp 0</p>
+                        <div class="bg-white/5 border border-white/10 p-3.5 rounded-xl backdrop-blur-sm">
+                            <p class="text-[10px] text-bakery-300 uppercase font-extrabold truncate">Estimasi HPP</p>
+                            <p id="fin-total-hpp" class="font-extrabold text-sm sm:text-base text-orange-200 mt-1 truncate">Rp 0</p>
                         </div>
                     </div>
 
-                    <div class="bg-gradient-to-r from-bakery-600 to-bakery-500 border border-bakery-400/50 p-4 rounded-2xl flex justify-between items-center shadow-lg">
+                    <div class="bg-gradient-to-r from-bakery-600 to-bakery-500 border border-bakery-400/40 p-3.5 rounded-xl flex justify-between items-center shadow-lg">
                         <div>
-                            <p class="text-[10px] text-bakery-100 uppercase tracking-wider font-bold">Net Profit (Keuntungan Bersih)</p>
-                            <p id="fin-net-profit" class="font-serif font-bold text-xl text-white mt-0.5">Rp 0</p>
+                            <p class="text-[10px] text-bakery-100 uppercase tracking-wider font-extrabold">Net Profit (Bersih)</p>
+                            <p id="fin-net-profit" class="font-extrabold text-lg text-white mt-0.5 tracking-tight truncate">Rp 0</p>
                         </div>
-                        <div class="w-11 h-11 rounded-2xl bg-white/20 text-white flex items-center justify-center shadow-inner">
-                            <i class="fa-solid fa-chart-line text-lg"></i>
+                        <div class="w-10 h-10 rounded-xl bg-white/20 text-white flex items-center justify-center shadow-inner shrink-0">
+                            <i class="fa-solid fa-chart-line text-base"></i>
                         </div>
                     </div>
                 </div>
 
-                <!-- Filter Period -->
-                <div class="flex space-x-2 text-xs">
-                    <button onclick="setFinancialPeriod('all')" class="fin-period-btn flex-1 py-2 rounded-xl bg-bakery-800 text-white font-medium transition shadow-sm">Semua</button>
-                    <button onclick="setFinancialPeriod('month')" class="fin-period-btn flex-1 py-2 rounded-xl bg-white text-bakery-800 border border-bakery-200 font-medium transition shadow-sm">Bulan Ini</button>
-                    <button onclick="setFinancialPeriod('today')" class="fin-period-btn flex-1 py-2 rounded-xl bg-white text-bakery-800 border border-bakery-200 font-medium transition shadow-sm">Hari Ini</button>
+                <div class="grid grid-cols-3 gap-2 text-xs font-bold">
+                    <button onclick="setFinancialPeriod('all')" class="fin-period-btn py-2.5 rounded-xl bg-bakery-800 text-white transition shadow-sm truncate">Semua</button>
+                    <button onclick="setFinancialPeriod('month')" class="fin-period-btn py-2.5 rounded-xl bg-white text-bakery-900 border border-bakery-200 transition shadow-sm truncate">Bulan Ini</button>
+                    <button onclick="setFinancialPeriod('today')" class="fin-period-btn py-2.5 rounded-xl bg-white text-bakery-900 border border-bakery-200 transition shadow-sm truncate">Hari Ini</button>
                 </div>
 
-                <!-- Transaction Ledger -->
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-bakery-200 space-y-3">
+                <div class="bg-white p-4.5 rounded-2xl shadow-sm border border-bakery-200 space-y-3">
                     <div class="flex justify-between items-center">
-                        <h3 class="font-serif font-bold text-bakery-950 text-sm">Buku Besar Transaksi</h3>
-                        <span class="text-[10px] text-bakery-700 font-medium">Selesai / Aktif</span>
+                        <h3 class="font-extrabold text-bakery-950 text-base tracking-tight">Buku Besar Transaksi</h3>
+                        <span class="text-[11px] text-bakery-800 font-bold">Aktif & Selesai</span>
                     </div>
-                    <div id="financial-ledger-list" class="space-y-2.5 max-h-[350px] overflow-y-auto pr-1">
+                    <div id="financial-ledger-list" class="space-y-2.5 max-h-[340px] overflow-y-auto pr-1">
                         <!-- Populated via JS -->
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 4: Setting (Aesthetic Header & Backup/Reset without stock) -->
+            <!-- TAB 4: SETTING -->
             <div id="tab-4" class="tab-pane p-4 space-y-4 hidden">
-                <!-- Aesthetic Shop Banner Card -->
-                <div class="bg-gradient-to-br from-bakery-800 via-bakery-900 to-bakery-950 text-white p-6 rounded-3xl shadow-xl relative overflow-hidden text-center space-y-3 border border-bakery-700/60">
-                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-bakery-500/20 rounded-full blur-2xl pointer-events-none"></div>
-                    <div class="w-16 h-16 bg-bakery-500/30 border border-bakery-400/50 rounded-2xl mx-auto flex items-center justify-center text-bakery-300 shadow-inner">
+                <div class="bg-gradient-to-br from-bakery-800 via-bakery-900 to-bakery-950 text-white p-6 rounded-2xl shadow-xl relative overflow-hidden text-center space-y-3 border border-bakery-700/60">
+                    <div class="absolute -right-8 -top-8 w-32 h-32 bg-bakery-500/20 rounded-full blur-xl pointer-events-none"></div>
+                    <div class="w-16 h-16 bg-bakery-500/30 border border-bakery-400/40 rounded-2xl mx-auto flex items-center justify-center text-bakery-300 shadow-inner">
                         <i class="fa-solid fa-store text-2xl"></i>
                     </div>
                     <div>
-                        <h2 class="font-serif font-bold text-xl text-bakery-100">Daily Bread</h2>
-                        <p class="text-xs text-bakery-300 mt-0.5">Sistem Manajemen & Pre-Order Toko Roti</p>
+                        <h2 class="font-extrabold text-xl text-bakery-100 tracking-tight">Daily Bread</h2>
+                        <p class="text-xs text-bakery-300 mt-0.5 font-semibold">Artisan Bakery & Pre-Order System</p>
                     </div>
-                    <div class="pt-2 flex justify-center space-x-4 text-xs text-bakery-300 border-t border-bakery-700/50">
-                        <div><i class="fa-solid fa-bread-slice mr-1 text-bakery-400"></i>Tart, Chiffon, Sisir, Brownies</div>
-                    </div>
-                </div>
-
-                <!-- Menu Item Prices Reference Card -->
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-bakery-200 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h3 class="font-serif font-bold text-bakery-950 text-sm">Katalog Harga Menu Roti</h3>
-                        <span class="text-[10px] text-bakery-700 bg-bakery-100 px-2 py-0.5 rounded font-medium">Tanpa Stok</span>
-                    </div>
-                    <div id="settings-menu-list" class="space-y-2">
-                        <!-- Populated via JS -->
+                    <div class="pt-2 flex justify-center space-x-3 text-[11px] text-bakery-200 border-t border-bakery-700/50 font-bold">
+                        <span><i class="fa-solid fa-bread-slice mr-1 text-bakery-400"></i>Made-to-Order • Tanpa Stok</span>
                     </div>
                 </div>
 
-                <!-- Backup & Reset Data -->
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-bakery-200 space-y-3">
-                    <h3 class="font-serif font-bold text-bakery-950 text-sm">Pengaturan Sistem</h3>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="exportDataJSON()" class="bg-bakery-100 hover:bg-bakery-200 text-bakery-900 p-3 rounded-xl text-xs font-semibold transition flex items-center justify-center space-x-1.5 shadow-sm">
-                            <i class="fa-solid fa-download text-bakery-600"></i>
-                            <span>Backup Data</span>
+                <div class="bg-white p-4.5 rounded-2xl shadow-sm border border-bakery-200 space-y-3">
+                    <h3 class="font-extrabold text-bakery-950 text-base tracking-tight">Pengaturan Data & Cadangan</h3>
+                    <div class="grid grid-cols-2 gap-2.5 text-xs font-bold">
+                        <button onclick="exportDataJSON()" class="bg-bakery-100 hover:bg-bakery-200 text-bakery-950 p-3.5 rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm">
+                            <i class="fa-solid fa-download text-bakery-700"></i>
+                            <span>Backup</span>
                         </button>
-                        <button onclick="resetAllData()" class="bg-red-50 hover:bg-red-100 text-red-700 p-3 rounded-xl text-xs font-semibold transition flex items-center justify-center space-x-1.5 shadow-sm">
+                        <button onclick="resetAllData()" class="bg-red-50 hover:bg-red-100 text-red-700 p-3.5 rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm">
                             <i class="fa-solid fa-trash-can"></i>
-                            <span>Reset Data</span>
+                            <span>Reset</span>
                         </button>
                     </div>
                 </div>
@@ -261,88 +238,88 @@
 
         </main>
 
-        <!-- Bottom Navigation Bar (4 Double-Size Tabs) -->
-        <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-bakery-200 py-2.5 px-3 flex justify-around items-center z-30 shadow-xl">
+        <!-- Four Bottom Navigation Tabs (Home, Booking, Profit & Loss, Setting) -->
+        <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-bakery-200 py-3 px-2 flex justify-around items-center z-30 shadow-2xl">
             <button onclick="switchTab(1)" id="nav-btn-1" class="nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-2xl text-bakery-500 transition">
-                <i class="fa-solid fa-calendar-days text-2xl mb-1"></i>
-                <span class="text-[11px] font-bold tracking-tight">Pesanan 7 Hari</span>
+                <i class="fa-solid fa-house text-2xl mb-0.5"></i>
+                <span class="text-[11px] font-extrabold tracking-tight">Home</span>
             </button>
             <button onclick="switchTab(2)" id="nav-btn-2" class="nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-2xl text-bakery-700 hover:text-bakery-950 transition">
-                <i class="fa-solid fa-book-bookmark text-2xl mb-1"></i>
-                <span class="text-[11px] font-semibold tracking-tight">Semua Booking</span>
+                <i class="fa-solid fa-book-bookmark text-2xl mb-0.5"></i>
+                <span class="text-[11px] font-extrabold tracking-tight">Booking</span>
             </button>
             <button onclick="switchTab(3)" id="nav-btn-3" class="nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-2xl text-bakery-700 hover:text-bakery-950 transition">
-                <i class="fa-solid fa-chart-pie text-2xl mb-1"></i>
-                <span class="text-[11px] font-semibold tracking-tight">Profit & Loss</span>
+                <i class="fa-solid fa-chart-pie text-2xl mb-0.5"></i>
+                <span class="text-[11px] font-extrabold tracking-tight">Profit & Loss</span>
             </button>
             <button onclick="switchTab(4)" id="nav-btn-4" class="nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-2xl text-bakery-700 hover:text-bakery-950 transition">
-                <i class="fa-solid fa-gear text-2xl mb-1"></i>
-                <span class="text-[11px] font-semibold tracking-tight">Setting</span>
+                <i class="fa-solid fa-gear text-2xl mb-0.5"></i>
+                <span class="text-[11px] font-extrabold tracking-tight">Setting</span>
             </button>
         </nav>
 
-        <!-- Order Modal (Buat / Edit Pesanan) -->
-        <div id="order-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
-            <div class="bg-bakery-50 w-full sm:max-w-md max-h-[90vh] overflow-y-auto rounded-t-[32px] sm:rounded-3xl shadow-2xl p-6 space-y-4 animate-in fade-in slide-in-from-bottom duration-200 border border-bakery-200">
+        <!-- Order Modal (Popup for Made-to-Order Creation) -->
+        <div id="order-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-3 hidden">
+            <div class="bg-bakery-50 w-full sm:max-w-md max-h-[90vh] overflow-y-auto rounded-t-[32px] sm:rounded-2xl shadow-2xl p-5 space-y-4 animate-in fade-in slide-in-from-bottom duration-200 border border-bakery-200">
                 <div class="flex justify-between items-center border-b border-bakery-200 pb-3">
-                    <h3 id="order-modal-title" class="font-serif font-bold text-bakery-950 text-base">Buat Pesanan Baru</h3>
-                    <button onclick="closeOrderModal()" class="w-8 h-8 rounded-full bg-bakery-200 flex items-center justify-center text-bakery-900 hover:bg-bakery-300">
-                        <i class="fa-solid fa-xmark"></i>
+                    <h3 id="order-modal-title" class="font-extrabold text-bakery-950 text-lg tracking-tight">Buat Pesanan Baru</h3>
+                    <button onclick="closeOrderModal()" class="w-8 h-8 rounded-full bg-bakery-200 flex items-center justify-center text-bakery-950 hover:bg-bakery-300 font-bold">
+                        <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
                 </div>
                 
-                <form id="order-form" onsubmit="saveOrder(event)" class="space-y-3.5 text-xs">
+                <form id="order-form" onsubmit="saveOrder(event)" class="space-y-3.5 text-xs font-semibold">
                     <input type="hidden" id="order-id">
                     
                     <div>
-                        <label class="block font-medium text-bakery-900 mb-1">Nama Pemesan</label>
-                        <input type="text" id="order-customer" required placeholder="Contoh: Ibu Siska" class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-bakery-500 text-bakery-950">
+                        <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">Nama Pemesan</label>
+                        <input type="text" id="order-customer" required placeholder="Contoh: Ibu Siska" class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-3 font-bold focus:outline-none focus:border-bakery-500 text-bakery-950 text-xs">
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-2 gap-2.5">
                         <div>
-                            <label class="block font-medium text-bakery-900 mb-1">Nomor Telepon / WA</label>
-                            <input type="text" id="order-phone" required placeholder="08123456789" class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-bakery-500 text-bakery-950">
+                            <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">No. Telepon / WA</label>
+                            <input type="text" id="order-phone" required placeholder="08123456789" class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-3 font-bold focus:outline-none focus:border-bakery-500 text-bakery-950 text-xs">
                         </div>
                         <div>
-                            <label class="block font-medium text-bakery-900 mb-1">Tanggal Pengambilan</label>
-                            <input type="date" id="order-date" required class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-bakery-500 text-bakery-950">
+                            <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">Tgl Pengambilan</label>
+                            <input type="date" id="order-date" required class="w-full bg-white border border-bakery-200 rounded-xl px-3 py-3 font-bold focus:outline-none focus:border-bakery-500 text-bakery-950 text-xs">
                         </div>
                     </div>
 
                     <div>
-                        <label class="block font-medium text-bakery-900 mb-1">Pilih Produk Roti</label>
-                        <select id="order-product-select" onchange="onProductSelectChange()" required class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-bakery-500 text-bakery-950">
+                        <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">Pilih Menu Roti</label>
+                        <select id="order-product-select" onchange="onProductSelectChange()" required class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-3 font-bold focus:outline-none focus:border-bakery-500 text-bakery-950 text-xs">
                             <!-- Populated via JS -->
                         </select>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-2 gap-2.5">
                         <div>
-                            <label class="block font-medium text-bakery-900 mb-1">Jumlah Porsi / Loyang</label>
-                            <input type="number" id="order-qty" min="1" value="1" oninput="calculateOrderTotal()" required class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-bakery-500 text-bakery-950">
+                            <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">Jumlah (Porsi/Loyang)</label>
+                            <input type="number" id="order-qty" min="1" value="1" oninput="calculateOrderTotal()" required class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-3 font-bold focus:outline-none focus:border-bakery-500 text-bakery-950 text-xs">
                         </div>
                         <div>
-                            <label class="block font-medium text-bakery-900 mb-1">Harga Jual Satuan (Rp)</label>
-                            <input type="number" id="order-price" min="0" oninput="calculateOrderTotal()" required class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-bakery-500 text-bakery-950">
-                        </div>
-                    </div>
-
-                    <div class="bg-bakery-100/80 p-3 rounded-2xl flex justify-between items-center border border-bakery-200">
-                        <div>
-                            <p class="text-[10px] text-bakery-700 font-medium">Total Harga Tagihan</p>
-                            <p id="order-total-preview" class="font-bold text-sm text-bakery-950">Rp 0</p>
-                        </div>
-                        <div>
-                            <p class="text-[10px] text-bakery-700 font-medium">Estimasi Total HPP</p>
-                            <p id="order-hpp-preview" class="font-bold text-xs text-orange-700">Rp 0</p>
+                            <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">Harga Jual Satuan (Rp)</label>
+                            <input type="number" id="order-price" min="0" oninput="calculateOrderTotal()" required class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-3 font-bold focus:outline-none focus:border-bakery-500 text-bakery-950 text-xs">
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-bakery-100 p-3.5 rounded-xl flex justify-between items-center border border-bakery-200">
                         <div>
-                            <label class="block font-medium text-bakery-900 mb-1">Status Pesanan</label>
-                            <select id="order-status" class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-2.5 focus:outline-none text-bakery-950">
+                            <p class="text-[10px] text-bakery-800 font-extrabold uppercase">Total Tagihan</p>
+                            <p id="order-total-preview" class="font-extrabold text-sm text-bakery-950 truncate">Rp 0</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] text-bakery-800 font-extrabold uppercase">Estimasi HPP</p>
+                            <p id="order-hpp-preview" class="font-extrabold text-xs text-orange-800 truncate">Rp 0</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">Status Pesanan</label>
+                            <select id="order-status" class="w-full bg-white border border-bakery-200 rounded-xl px-3 py-3 font-bold focus:outline-none text-bakery-950 text-xs truncate">
                                 <option value="Pending">Pending</option>
                                 <option value="Diproses">Diproses</option>
                                 <option value="Selesai">Selesai</option>
@@ -350,8 +327,8 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block font-medium text-bakery-900 mb-1">Status Pembayaran</label>
-                            <select id="order-payment" class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-2.5 focus:outline-none text-bakery-950">
+                            <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">Status Bayar</label>
+                            <select id="order-payment" class="w-full bg-white border border-bakery-200 rounded-xl px-3 py-3 font-bold focus:outline-none text-bakery-950 text-xs truncate">
                                 <option value="Belum Bayar">Belum Bayar</option>
                                 <option value="DP">DP (Uang Muka)</option>
                                 <option value="Lunas">Lunas</option>
@@ -360,43 +337,33 @@
                     </div>
 
                     <div>
-                        <label class="block font-medium text-bakery-900 mb-1">Catatan Tambahan (Opsional)</label>
-                        <textarea id="order-notes" placeholder="Contoh: Tulisan Happy Birthday coklat di atas kue" rows="2" class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-2 focus:outline-none focus:border-bakery-500 text-bakery-950"></textarea>
+                        <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">Catatan Khusus (Opsional)</label>
+                        <textarea id="order-notes" placeholder="Contoh: Tulisan Happy Birthday coklat" rows="2" class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-2.5 font-bold focus:outline-none focus:border-bakery-500 text-bakery-950 text-xs"></textarea>
                     </div>
 
-                    <div class="pt-2 flex space-x-3">
-                        <button type="button" onclick="closeOrderModal()" class="flex-1 bg-bakery-200 text-bakery-900 py-3 rounded-xl font-semibold hover:bg-bakery-300 transition">Batal</button>
-                        <button type="submit" class="flex-1 bg-bakery-500 text-white py-3 rounded-xl font-semibold hover:bg-bakery-600 transition shadow-md">Simpan Pesanan</button>
+                    <div class="pt-2 flex space-x-2.5">
+                        <button type="button" onclick="closeOrderModal()" class="flex-1 bg-bakery-200 text-bakery-950 py-3.5 rounded-xl font-bold hover:bg-bakery-300 transition text-xs">Batal</button>
+                        <button type="submit" class="flex-1 bg-bakery-500 text-white py-3.5 rounded-xl font-bold hover:bg-bakery-600 transition shadow-md text-xs">Simpan</button>
                     </div>
                 </form>
             </div>
         </div>
 
         <!-- Custom Toast Notification Box -->
-        <div id="toast" class="absolute top-16 left-1/2 transform -translate-x-1/2 bg-bakery-950 text-bakery-100 px-4 py-2.5 rounded-2xl shadow-2xl text-xs flex items-center space-x-2 opacity-0 pointer-events-none transition-opacity duration-300 z-50 border border-bakery-700">
-            <i class="fa-solid fa-circle-check text-bakery-400"></i>
+        <div id="toast" class="absolute top-16 left-1/2 transform -translate-x-1/2 bg-bakery-950 text-bakery-100 px-5 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center space-x-2.5 opacity-0 pointer-events-none transition-opacity duration-300 z-50 border border-bakery-700">
+            <i class="fa-solid fa-circle-check text-bakery-400 text-base"></i>
             <span id="toast-msg">Berhasil disimpan</span>
         </div>
 
     </div>
 
+    <!-- Application JavaScript Logic -->
     <script>
-        // Realtime Clock Simulation
-        function updateClock() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            document.getElementById('current-time').innerText = `${hours}:${minutes}`;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        // Default Bakery Menu (Tart, Chiffon, Sisir, Brownies) without stock
         const DEFAULT_MENU = [
             { id: 'm1', name: 'Tart Coklat Ganache Spesial', category: 'Tart & Cake', price: 220000, hpp: 120000 },
             { id: 'm2', name: 'Chiffon Pandan Keju Lembut', category: 'Chiffon & Sponge', price: 85000, hpp: 45000 },
-            { id: 'm3', name: 'Roti Sisir Mentega Jadul', category: 'Roti Sisir & Traditional', price: 35000, hpp: 18000 },
-            { id: 'm4', name: 'Brownies Panggang Almond Fudgy', category: 'Brownies & Pastry', price: 95000, hpp: 50000 }
+            { id: 'm3', name: 'Roti Sisir Mentega Jadul', category: 'Roti Sisir', price: 35000, hpp: 18000 },
+            { id: 'm4', name: 'Brownies Panggang Almond Fudgy', category: 'Brownies', price: 95000, hpp: 50000 }
         ];
 
         const todayDateStr = new Date().toISOString().split('T')[0];
@@ -431,11 +398,9 @@
             }
         ];
 
-        // State Management
         let menuItems = JSON.parse(localStorage.getItem('daily_bread_menu')) || DEFAULT_MENU;
         let orders = JSON.parse(localStorage.getItem('daily_bread_orders')) || DEFAULT_ORDERS;
         let privacyMode = false;
-        let currentWeekFilter = 'all';
         let currentFinPeriod = 'all';
 
         function saveData() {
@@ -458,7 +423,6 @@
             return 'Rp ' + Number(amount).toLocaleString('id-ID');
         }
 
-        // Navigation Controller
         function switchTab(tabNum) {
             for (let i = 1; i <= 4; i++) {
                 document.getElementById(`tab-${i}`).classList.add('hidden');
@@ -473,19 +437,6 @@
             refreshAllViews();
         }
 
-        function filterWeekOrders(filter) {
-            currentWeekFilter = filter;
-            const buttons = document.querySelectorAll('.week-filter-btn');
-            buttons.forEach(b => {
-                b.classList.remove('bg-bakery-800', 'text-white');
-                b.classList.add('bg-white', 'text-bakery-800', 'border', 'border-bakery-200');
-            });
-            event.target.classList.remove('bg-white', 'text-bakery-800', 'border');
-            event.target.classList.add('bg-bakery-800', 'text-white');
-            renderSevenDayOrders();
-        }
-
-        // Render 7-Day Continuous Vertical List
         function renderSevenDayOrders() {
             const container = document.getElementById('seven-day-list');
             container.innerHTML = '';
@@ -512,69 +463,60 @@
             });
 
             let html = '';
-            let hasAny = false;
 
             Object.keys(daysMap).forEach(dateKey => {
                 let dayData = daysMap[dateKey];
                 let dayOrders = dayData.orders;
-
-                if (currentWeekFilter === 'today' && dateKey !== today.toISOString().split('T')[0]) return;
-                if (currentWeekFilter === 'pending') {
-                    dayOrders = dayOrders.filter(o => o.status !== 'Selesai' && o.status !== 'Dibatalkan');
-                    if (dayOrders.length === 0) return;
-                }
-
-                hasAny = true;
                 let isToday = dateKey === today.toISOString().split('T')[0];
 
                 html += `
-                    <div class="bg-white rounded-2xl p-4 shadow-sm border ${isToday ? 'border-bakery-500 ring-1 ring-bakery-500/40' : 'border-bakery-200'} space-y-3">
+                    <div class="bg-white rounded-2xl p-4 shadow-sm border ${isToday ? 'border-bakery-500 ring-2 ring-bakery-500/30' : 'border-bakery-200'} space-y-3">
                         <div class="flex justify-between items-center border-b border-bakery-100 pb-2">
                             <div class="flex items-center space-x-2">
                                 <span class="w-2.5 h-2.5 rounded-full ${isToday ? 'bg-bakery-500 animate-pulse' : 'bg-bakery-300'}"></span>
-                                <h4 class="font-serif font-bold text-bakery-950 text-sm">${dayData.label}</h4>
-                                <span class="text-[10px] text-bakery-700 bg-bakery-100 px-2 py-0.5 rounded-full">${dateKey}</span>
+                                <h4 class="font-extrabold text-bakery-950 text-sm tracking-tight">${dayData.label}</h4>
+                                <span class="text-[10px] text-bakery-800 bg-bakery-100 px-2 py-0.5 rounded-full font-bold">${dateKey}</span>
                             </div>
-                            <span class="text-xs font-semibold text-bakery-800">${dayOrders.length} Pesanan</span>
+                            <span class="text-[11px] font-extrabold text-bakery-900">${dayOrders.length} Pesanan</span>
                         </div>
                 `;
 
                 if (dayOrders.length === 0) {
-                    html += `<p class="text-xs text-bakery-700 italic py-2 text-center">Belum ada pesanan terjadwal untuk hari ini.</p>`;
+                    html += `<p class="text-[11px] text-bakery-800 italic py-2 text-center font-bold">Tidak ada pre-order.</p>`;
                 } else {
                     html += `<div class="space-y-2.5">`;
                     dayOrders.forEach(ord => {
-                        let statusColor = ord.status === 'Selesai' ? 'bg-green-100 text-green-800' : ord.status === 'Diproses' ? 'bg-blue-100 text-blue-800' : ord.status === 'Dibatalkan' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800';
-                        let payColor = ord.payment === 'Lunas' ? 'text-green-700 font-semibold' : ord.payment === 'DP' ? 'text-blue-700 font-medium' : 'text-amber-700';
+                        let statusColor = ord.status === 'Selesai' ? 'bg-green-100 text-green-900 font-extrabold' : ord.status === 'Diproses' ? 'bg-blue-100 text-blue-900 font-extrabold' : ord.status === 'Dibatalkan' ? 'bg-red-100 text-red-900 font-extrabold' : 'bg-amber-100 text-amber-900 font-extrabold';
+                        let payColor = ord.payment === 'Lunas' ? 'text-green-800 font-extrabold' : ord.payment === 'DP' ? 'text-blue-800 font-extrabold' : 'text-amber-800 font-extrabold';
                         
                         html += `
-                            <div class="bg-bakery-50/80 border border-bakery-200 p-3 rounded-xl flex flex-col space-y-2">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <div class="flex items-center space-x-1.5">
-                                            <span class="font-bold text-bakery-950 text-xs">${ord.customer}</span>
-                                            <span class="text-[10px] text-bakery-700">(${ord.phone})</span>
+                            <div class="bg-bakery-50 border border-bakery-200 p-3.5 rounded-xl flex flex-col space-y-2.5 safe-text-wrap">
+                                <div class="flex justify-between items-start gap-2">
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex items-center space-x-1.5 flex-wrap">
+                                            <span class="font-extrabold text-bakery-950 text-xs">${ord.customer}</span>
+                                            <span class="text-[10px] text-bakery-800 font-bold">(${ord.phone})</span>
                                         </div>
-                                        <p class="text-xs font-serif font-semibold text-bakery-900 mt-0.5">${ord.product} <span class="text-bakery-700 font-normal">(${ord.qty}x)</span></p>
+                                        <p class="text-xs font-bold text-bakery-900 mt-0.5">${ord.product} <span class="text-bakery-800 font-extrabold">(${ord.qty}x)</span></p>
                                     </div>
-                                    <span class="text-[10px] px-2 py-0.5 rounded-full font-medium ${statusColor}">${ord.status}</span>
+                                    <span class="text-[10px] px-2.5 py-0.5 rounded-full ${statusColor} shrink-0">${ord.status}</span>
                                 </div>
                                 
-                                ${ord.notes ? `<p class="text-[11px] text-bakery-700 italic bg-white/70 p-1.5 rounded-lg border border-bakery-100"><i class="fa-solid fa-note-sticky mr-1 text-bakery-500"></i>${ord.notes}</p>` : ''}
+                                ${ord.notes ? `<p class="text-[11px] text-bakery-900 italic bg-white p-2 rounded-lg border border-bakery-100 font-bold"><i class="fa-solid fa-note-sticky mr-1 text-bakery-500"></i>${ord.notes}</p>` : ''}
                                 
-                                <div class="flex justify-between items-center pt-1 border-t border-bakery-200/60 text-[11px]">
-                                    <div>
-                                        <span class="text-bakery-700">Bayar: </span>
-                                        <span class="${payColor}">${ord.payment}</span>
+                                <div class="flex justify-between items-center pt-2 border-t border-bakery-200/70 text-xs">
+                                    <div class="truncate mr-2">
+                                        <span class="text-bakery-800 font-bold text-[10px]">Bayar:</span>
+                                        <span class="${payColor} text-[10px]">${ord.payment}</span>
                                         <span class="mx-1 text-bakery-300">|</span>
-                                        <span class="font-bold text-bakery-950">${formatIDR(ord.price * ord.qty)}</span>
+                                        <span class="font-extrabold text-bakery-950">${formatIDR(ord.price * ord.qty)}</span>
                                     </div>
-                                    <div class="flex space-x-1">
-                                        <button onclick="editOrder('${ord.id}')" class="bg-white hover:bg-bakery-200 text-bakery-900 p-1.5 rounded-lg border border-bakery-200 transition" title="Edit">
-                                            <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                    <div class="flex space-x-1.5 shrink-0">
+                                        <button onclick="editOrder('${ord.id}')" class="bg-white hover:bg-bakery-200 text-bakery-950 px-2.5 py-1.5 rounded-lg border border-bakery-200 font-bold transition flex items-center space-x-1 text-[11px] shadow-sm">
+                                            <i class="fa-solid fa-pen text-[10px]"></i><span>Edit</span>
                                         </button>
-                                        <button onclick="deleteOrder('${ord.id}')" class="bg-white hover:bg-red-50 text-red-600 p-1.5 rounded-lg border border-bakery-200 transition" title="Hapus">
-                                            <i class="fa-solid fa-trash text-xs"></i>
+                                        <button onclick="deleteOrder('${ord.id}')" class="bg-white hover:bg-red-50 text-red-700 px-2.5 py-1.5 rounded-lg border border-bakery-200 font-bold transition flex items-center space-x-1 text-[11px] shadow-sm">
+                                            <i class="fa-solid fa-trash text-[10px]"></i><span>Hapus</span>
                                         </button>
                                     </div>
                                 </div>
@@ -590,7 +532,6 @@
             container.innerHTML = html;
         }
 
-        // Render All Bookings List
         function renderBookingsList() {
             const container = document.getElementById('all-bookings-list');
             const search = document.getElementById('search-booking-input').value.toLowerCase();
@@ -608,39 +549,39 @@
             document.getElementById('total-bookings-count').innerText = `${filtered.length} Pesanan`;
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="bg-white p-6 rounded-2xl text-center text-xs text-bakery-700 border border-bakery-200">Tidak ada booking yang sesuai pencarian.</div>`;
+                container.innerHTML = `<div class="bg-white p-5 rounded-2xl text-center text-xs font-bold text-bakery-800 border border-bakery-200">Tidak ada booking yang ditemukan.</div>`;
                 return;
             }
 
             let html = '';
             filtered.forEach(ord => {
-                let statusColor = ord.status === 'Selesai' ? 'bg-green-100 text-green-800' : ord.status === 'Diproses' ? 'bg-blue-100 text-blue-800' : ord.status === 'Dibatalkan' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800';
+                let statusColor = ord.status === 'Selesai' ? 'bg-green-100 text-green-900 font-extrabold' : ord.status === 'Diproses' ? 'bg-blue-100 text-blue-900 font-extrabold' : ord.status === 'Dibatalkan' ? 'bg-red-100 text-red-900 font-extrabold' : 'bg-amber-100 text-amber-900 font-extrabold';
                 
                 html += `
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-bakery-200 space-y-2.5">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="text-[10px] text-bakery-700 font-medium">${ord.date}</span>
-                                <h4 class="font-bold text-bakery-950 text-xs">${ord.customer} <span class="font-normal text-bakery-700">(${ord.phone})</span></h4>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-bakery-200 space-y-2.5 safe-text-wrap">
+                        <div class="flex justify-between items-start gap-2">
+                            <div class="min-w-0 flex-1">
+                                <span class="text-[10px] text-bakery-800 font-extrabold">${ord.date}</span>
+                                <h4 class="font-extrabold text-bakery-950 text-xs mt-0.5 truncate">${ord.customer} <span class="font-bold text-bakery-800 text-[10px]">(${ord.phone})</span></h4>
                             </div>
-                            <span class="text-[10px] px-2.5 py-0.5 rounded-full font-medium ${statusColor}">${ord.status}</span>
+                            <span class="text-[10px] px-2.5 py-0.5 rounded-full ${statusColor} shrink-0">${ord.status}</span>
                         </div>
-                        <div class="bg-bakery-50 p-2.5 rounded-xl flex justify-between items-center text-xs">
-                            <div>
-                                <p class="font-serif font-semibold text-bakery-950">${ord.product} <span class="text-bakery-700">(${ord.qty}x)</span></p>
-                                <p class="text-[10px] text-bakery-700 mt-0.5">Pembayaran: <span class="font-semibold text-bakery-900">${ord.payment}</span></p>
+                        <div class="bg-bakery-50 p-3 rounded-xl flex justify-between items-center text-xs gap-2">
+                            <div class="min-w-0 flex-1">
+                                <p class="font-bold text-bakery-950 text-xs truncate">${ord.product} <span class="text-bakery-800 font-bold">(${ord.qty}x)</span></p>
+                                <p class="text-[10px] text-bakery-800 font-bold mt-0.5">Bayar: <span class="text-bakery-950 font-extrabold">${ord.payment}</span></p>
                             </div>
-                            <div class="text-right">
-                                <p class="font-bold text-bakery-950 text-xs">${formatIDR(ord.price * ord.qty)}</p>
-                                <p class="text-[10px] text-orange-700">HPP: ${formatIDR(ord.hpp * ord.qty)}</p>
+                            <div class="text-right shrink-0">
+                                <p class="font-extrabold text-bakery-950 text-xs">${formatIDR(ord.price * ord.qty)}</p>
+                                <p class="text-[10px] text-orange-800 font-bold">HPP: ${formatIDR(ord.hpp * ord.qty)}</p>
                             </div>
                         </div>
                         <div class="flex justify-end space-x-1.5 pt-1">
-                            <button onclick="editOrder('${ord.id}')" class="bg-bakery-100 hover:bg-bakery-200 text-bakery-900 px-3 py-1.5 rounded-xl text-xs font-medium transition flex items-center space-x-1">
-                                <i class="fa-solid fa-pen"></i><span>Edit</span>
+                            <button onclick="editOrder('${ord.id}')" class="bg-bakery-100 hover:bg-bakery-200 text-bakery-950 px-2.5 py-1 rounded-lg text-[11px] font-bold transition flex items-center space-x-1 shadow-sm">
+                                <i class="fa-solid fa-pen text-[10px]"></i><span>Edit</span>
                             </button>
-                            <button onclick="deleteOrder('${ord.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-xl text-xs font-medium transition flex items-center space-x-1">
-                                <i class="fa-solid fa-trash"></i><span>Hapus</span>
+                            <button onclick="deleteOrder('${ord.id}')" class="bg-red-50 hover:bg-red-100 text-red-700 px-2.5 py-1 rounded-lg text-[11px] font-bold transition flex items-center space-x-1 shadow-sm">
+                                <i class="fa-solid fa-trash text-[10px]"></i><span>Hapus</span>
                             </button>
                         </div>
                     </div>
@@ -662,9 +603,9 @@
             const buttons = document.querySelectorAll('.fin-period-btn');
             buttons.forEach(b => {
                 b.classList.remove('bg-bakery-800', 'text-white');
-                b.classList.add('bg-white', 'text-bakery-800', 'border', 'border-bakery-200');
+                b.classList.add('bg-white', 'text-bakery-900', 'border', 'border-bakery-200');
             });
-            event.target.classList.remove('bg-white', 'text-bakery-800', 'border');
+            event.target.classList.remove('bg-white', 'text-bakery-900', 'border');
             event.target.classList.add('bg-bakery-800', 'text-white');
             renderFinancialDashboard();
         }
@@ -696,7 +637,7 @@
 
             const ledgerContainer = document.getElementById('financial-ledger-list');
             if (filteredOrders.length === 0) {
-                ledgerContainer.innerHTML = `<p class="text-xs text-bakery-700 text-center py-4">Belum ada transaksi pada periode ini.</p>`;
+                ledgerContainer.innerHTML = `<p class="text-xs text-bakery-800 font-bold text-center py-3">Tidak ada transaksi pada periode ini.</p>`;
                 return;
             }
 
@@ -707,18 +648,18 @@
                 let profit = rev - hpp;
 
                 html += `
-                    <div class="bg-bakery-50 p-3 rounded-xl border border-bakery-200 text-xs flex justify-between items-center">
-                        <div>
-                            <div class="flex items-center space-x-1.5">
-                                <span class="font-bold text-bakery-950">${ord.customer}</span>
-                                <span class="text-[10px] text-bakery-700">(${ord.date})</span>
+                    <div class="bg-bakery-50 p-3 rounded-xl border border-bakery-200 text-xs flex justify-between items-center shadow-sm safe-text-wrap gap-2">
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center space-x-1.5 flex-wrap">
+                                <span class="font-extrabold text-bakery-950 text-xs">${ord.customer}</span>
+                                <span class="text-[10px] text-bakery-800 font-bold">(${ord.date})</span>
                             </div>
-                            <p class="text-bakery-900 text-[11px] font-serif mt-0.5">${ord.product} (${ord.qty}x)</p>
-                            <p class="text-[10px] text-bakery-700 mt-0.5">Omzet: ${formatIDR(rev)} | HPP: ${formatIDR(hpp)}</p>
+                            <p class="text-bakery-900 text-xs font-bold mt-0.5 truncate">${ord.product} (${ord.qty}x)</p>
+                            <p class="text-[10px] text-bakery-800 font-bold mt-0.5">Omzet: ${formatIDR(rev)} | HPP: ${formatIDR(hpp)}</p>
                         </div>
-                        <div class="text-right">
-                            <span class="text-[10px] text-bakery-700 block">Profit</span>
-                            <span class="font-bold text-emerald-700">${formatIDR(profit)}</span>
+                        <div class="text-right shrink-0">
+                            <span class="text-[10px] text-bakery-800 font-bold block">Profit</span>
+                            <span class="font-extrabold text-emerald-800 text-xs">${formatIDR(profit)}</span>
                         </div>
                     </div>
                 `;
@@ -726,37 +667,6 @@
             ledgerContainer.innerHTML = html;
         }
 
-        // Render Settings Menu Items (No stock)
-        function renderSettingsMenuList() {
-            const container = document.getElementById('settings-menu-list');
-            if (menuItems.length === 0) {
-                container.innerHTML = `<p class="text-xs text-bakery-700 text-center py-2">Belum ada menu roti.</p>`;
-                return;
-            }
-
-            let html = '';
-            menuItems.forEach(item => {
-                let margin = item.price - item.hpp;
-                let marginPct = item.price > 0 ? Math.round((margin / item.price) * 100) : 0;
-
-                html += `
-                    <div class="bg-bakery-50 p-3 rounded-xl border border-bakery-200 text-xs flex justify-between items-center">
-                        <div>
-                            <span class="text-[9px] bg-bakery-200 text-bakery-800 px-1.5 py-0.5 rounded font-semibold">${item.category}</span>
-                            <h4 class="font-serif font-bold text-bakery-950 mt-1">${item.name}</h4>
-                            <p class="text-[10px] text-bakery-700 mt-0.5">Harga: <b>${formatIDR(item.price)}</b> | HPP: <b>${formatIDR(item.hpp)}</b></p>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-[10px] text-bakery-700 block">Margin</span>
-                            <span class="font-bold text-emerald-700">${marginPct}%</span>
-                        </div>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-        }
-
-        // Order Modal Handling
         function openOrderModal(editId = null) {
             const modal = document.getElementById('order-modal');
             const form = document.getElementById('order-form');
@@ -888,7 +798,7 @@
         }
 
         function resetAllData() {
-            if (confirm('Reset seluruh data pesanan dan menu ke default?')) {
+            if (confirm('Reset seluruh data pesanan ke default?')) {
                 localStorage.clear();
                 menuItems = DEFAULT_MENU;
                 orders = DEFAULT_ORDERS;
@@ -901,10 +811,8 @@
             renderSevenDayOrders();
             renderBookingsList();
             renderFinancialDashboard();
-            renderSettingsMenuList();
         }
 
-        // Initial Load on startup
         refreshAllViews();
     </script>
 </body>
