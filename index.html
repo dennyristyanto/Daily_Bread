@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Bread - Artisan Bakery & Pre-Order</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Daily Bread Bakery App</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for navigation icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
@@ -14,806 +12,1117 @@
                 extend: {
                     colors: {
                         bakery: {
-                            50: '#fffbf7',
-                            100: '#fef3e6',
-                            200: '#fde4c4',
-                            300: '#f9cb93',
-                            400: '#f49d5c',
-                            500: '#eb7a2e',
-                            600: '#dc611b',
-                            700: '#b74b17',
-                            800: '#923c1b',
-                            900: '#773319',
-                            950: '#40180c',
-                        }
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            200: '#fed7aa',
+                            300: '#fdba74',
+                            400: '#fb923c',
+                            500: '#f97316',
+                            600: '#ea580c',
+                            700: '#c2410c',
+                            800: '#9a3412',
+                            900: '#7c2d12',
+                            950: '#431407',
+                        },
+                        terracotta: {
+                            50: '#fdf8f6',
+                            100: '#fbeee9',
+                            500: '#d97706',
+                            600: '#b45309',
+                            700: '#92400e',
+                        },
+                        cream: '#fdfbf7',
+                        cardbg: '#ffffff'
                     },
                     fontFamily: {
-                        sans: [
-                            '-apple-system',
-                            'BlinkMacSystemFont',
-                            '"SF Pro Display"',
-                            '"SF Pro Text"',
-                            '"SF Pro"',
-                            'Segoe UI',
-                            'Roboto',
-                            'Helvetica',
-                            'Arial',
-                            'sans-serif'
-                        ]
+                        sans: ['-apple-system', 'BlinkMacSystemFont', "SF Pro Display", "SF Pro Text", "Helvetica Neue", 'Segoe UI', 'Roboto', 'sans-serif']
                     }
                 }
             }
         }
     </script>
     <style>
-        ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #fffbf7;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #fde4c4;
-            border-radius: 4px;
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
         body {
-            background-color: #1a0f0a;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            font-size: 16px;
-            color: #40180c;
+            background-color: #2b1810;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+            overflow-x: hidden;
         }
-        .phone-frame {
-            box-shadow: 0 25px 60px -15px rgba(220, 97, 27, 0.4), 0 0 0 10px #120905, 0 0 0 12px #3d160a;
+        /* Custom scrollbars for clean mobile feel */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
         }
-        .safe-text-wrap {
-            word-break: break-word;
-            overflow-wrap: break-word;
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fed7aa;
+            border-radius: 9999px;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-0 sm:p-4">
 
-    <!-- iPhone Mockup Container (No Status Bar / Notch at Top) -->
-    <div class="w-full sm:w-[420px] h-screen sm:h-[915px] bg-bakery-50 text-bakery-950 flex flex-col relative overflow-hidden sm:rounded-[48px] phone-frame">
+    <!-- iPhone Device Mockup Frame -->
+    <div id="app-container" class="w-full max-w-[430px] min-w-[320px] h-[100vh] sm:h-[880px] bg-cream sm:rounded-[48px] sm:shadow-2xl sm:border-[10px] sm:border-[#1e110b] flex flex-col relative overflow-hidden">
         
-        <!-- App Header Bar -->
-        <header class="bg-gradient-to-r from-bakery-900 via-bakery-800 to-bakery-700 text-bakery-50 px-5 py-4 flex items-center justify-between shrink-0 shadow-md z-20">
+        <!-- Top Dynamic Notch-Free Header -->
+        <header class="bg-gradient-to-r from-bakery-800 to-bakery-600 text-white px-5 pt-4 pb-4 shadow-md flex items-center justify-between shrink-0 z-20">
             <div class="flex items-center space-x-3">
-                <div class="w-11 h-11 rounded-2xl bg-bakery-500/20 flex items-center justify-center border border-bakery-400/30 text-bakery-300 shadow-inner">
-                    <i class="fa-solid fa-wheat-awn text-lg"></i>
+                <div class="w-10 h-10 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center text-bakery-100 shadow-inner">
+                    <i class="fa-solid fa-wheat-awn text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="font-extrabold text-lg tracking-tight text-bakery-100 leading-tight">Daily Bread</h1>
-                    <p class="text-[11px] text-bakery-300 uppercase tracking-wider font-extrabold">Artisan Bakery</p>
+                    <h1 class="font-bold text-lg tracking-tight leading-tight">Daily Bread</h1>
+                    <p class="text-xs text-bakery-100 opacity-90 font-medium">Bakery & Pastry Studio</p>
                 </div>
             </div>
-            <button onclick="openOrderModal()" class="bg-bakery-500 text-white px-3.5 py-2 rounded-xl font-bold text-xs shadow-md hover:bg-bakery-600 transition flex items-center space-x-1.5 active:scale-95 shrink-0">
-                <i class="fa-solid fa-plus text-[10px]"></i>
-                <span>Pesanan</span>
-            </button>
+            <div class="flex items-center space-x-2">
+                <button onclick="togglePrivacy()" id="privacy-btn" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-bakery-100 transition" title="Sembunyikan/Tampilkan Nominal">
+                    <i class="fa-solid fa-eye text-sm" id="privacy-icon"></i>
+                </button>
+                <button onclick="openQuickBookingModal()" class="w-9 h-9 rounded-full bg-white text-bakery-700 hover:bg-bakery-50 flex items-center justify-center shadow font-bold transition">
+                    <i class="fa-solid fa-plus text-sm"></i>
+                </button>
+            </div>
         </header>
 
-        <!-- Main Scrollable Content Area -->
-        <main id="main-content" class="flex-1 overflow-y-auto pb-32 relative">
-            
-            <!-- TAB 1: HOME (7-Day Schedule) -->
-            <div id="tab-1" class="tab-pane p-4 space-y-4">
-                <div class="bg-gradient-to-br from-white to-bakery-100 p-4.5 rounded-2xl shadow-sm border border-bakery-200 flex justify-between items-center">
-                    <div>
-                        <span class="text-[10px] bg-bakery-200 text-bakery-950 px-2.5 py-0.5 rounded font-extrabold uppercase tracking-wider">Jadwal Aktif</span>
-                        <h2 class="font-extrabold text-bakery-950 text-lg mt-1 tracking-tight">7 Hari Kedepan</h2>
-                        <p class="text-[11px] text-bakery-800 font-semibold mt-0.5">Urutan kronologis pre-order</p>
-                    </div>
-                    <button onclick="openOrderModal()" class="bg-bakery-500 hover:bg-bakery-600 text-white px-3 py-2 rounded-xl text-xs font-bold shadow transition flex items-center space-x-1 shrink-0">
-                        <i class="fa-solid fa-plus"></i>
-                        <span>Buat</span>
-                    </button>
-                </div>
-
-                <div id="seven-day-list" class="space-y-3.5">
-                    <!-- Populated via JS -->
-                </div>
-            </div>
-
-            <!-- TAB 2: BOOKING -->
-            <div id="tab-2" class="tab-pane p-4 space-y-4 hidden">
-                <div class="bg-white p-4.5 rounded-2xl shadow-sm border border-bakery-200 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h2 class="font-extrabold text-bakery-950 text-lg tracking-tight">Arsip Semua Booking</h2>
-                        <span id="total-bookings-count" class="text-[11px] bg-bakery-100 text-bakery-900 px-2.5 py-1 rounded-full font-extrabold">0 Pesanan</span>
-                    </div>
-                    <div class="relative">
-                        <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-bakery-400 text-xs"></i>
-                        <input type="text" id="search-booking-input" oninput="renderBookingsList()" placeholder="Cari nama pemesan atau produk..." class="w-full bg-bakery-50 border border-bakery-200 rounded-xl pl-9 pr-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:border-bakery-500 text-bakery-950">
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        <select id="status-filter-select" onchange="renderBookingsList()" class="bg-bakery-50 border border-bakery-200 rounded-xl px-3 py-2.5 font-bold focus:outline-none text-bakery-950 truncate">
-                            <option value="all">Semua Status</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Diproses">Diproses</option>
-                            <option value="Selesai">Selesai</option>
-                            <option value="Dibatalkan">Dibatalkan</option>
-                        </select>
-                        <select id="payment-filter-select" onchange="renderBookingsList()" class="bg-bakery-50 border border-bakery-200 rounded-xl px-3 py-2.5 font-bold focus:outline-none text-bakery-950 truncate">
-                            <option value="all">Semua Pembayaran</option>
-                            <option value="Lunas">Lunas</option>
-                            <option value="DP">DP</option>
-                            <option value="Belum Bayar">Belum Bayar</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="all-bookings-list" class="space-y-3">
-                    <!-- Populated via JS -->
-                </div>
-            </div>
-
-            <!-- TAB 3: PROFIT & LOSS -->
-            <div id="tab-3" class="tab-pane p-4 space-y-4 hidden">
-                <div class="bg-gradient-to-br from-bakery-900 via-bakery-800 to-bakery-950 text-bakery-50 p-5 rounded-2xl shadow-xl relative overflow-hidden border border-bakery-700/50">
-                    <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-bakery-500/15 rounded-full blur-xl pointer-events-none"></div>
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <span class="text-[10px] uppercase tracking-widest text-bakery-300 font-extrabold">Laporan Keuangan</span>
-                            <h2 class="font-extrabold text-xl text-white mt-0.5 tracking-tight">Profit & Loss</h2>
-                        </div>
-                        <button onclick="togglePrivacyMode()" class="bg-white/15 hover:bg-white/25 px-3 py-1.5 rounded-xl text-xs font-bold text-bakery-200 flex items-center space-x-1.5 transition shrink-0">
-                            <i id="privacy-icon" class="fa-solid fa-eye text-xs"></i>
-                            <span id="privacy-text">Tampil</span>
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3 mb-3">
-                        <div class="bg-white/5 border border-white/10 p-3.5 rounded-xl backdrop-blur-sm">
-                            <p class="text-[10px] text-bakery-300 uppercase font-extrabold truncate">Total Omset</p>
-                            <p id="fin-total-revenue" class="font-extrabold text-sm sm:text-base text-white mt-1 truncate">Rp 0</p>
-                        </div>
-                        <div class="bg-white/5 border border-white/10 p-3.5 rounded-xl backdrop-blur-sm">
-                            <p class="text-[10px] text-bakery-300 uppercase font-extrabold truncate">Estimasi HPP</p>
-                            <p id="fin-total-hpp" class="font-extrabold text-sm sm:text-base text-orange-200 mt-1 truncate">Rp 0</p>
-                        </div>
-                    </div>
-
-                    <div class="bg-gradient-to-r from-bakery-600 to-bakery-500 border border-bakery-400/40 p-3.5 rounded-xl flex justify-between items-center shadow-lg">
-                        <div>
-                            <p class="text-[10px] text-bakery-100 uppercase tracking-wider font-extrabold">Net Profit (Bersih)</p>
-                            <p id="fin-net-profit" class="font-extrabold text-lg text-white mt-0.5 tracking-tight truncate">Rp 0</p>
-                        </div>
-                        <div class="w-10 h-10 rounded-xl bg-white/20 text-white flex items-center justify-center shadow-inner shrink-0">
-                            <i class="fa-solid fa-chart-line text-base"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-3 gap-2 text-xs font-bold">
-                    <button onclick="setFinancialPeriod('all')" class="fin-period-btn py-2.5 rounded-xl bg-bakery-800 text-white transition shadow-sm truncate">Semua</button>
-                    <button onclick="setFinancialPeriod('month')" class="fin-period-btn py-2.5 rounded-xl bg-white text-bakery-900 border border-bakery-200 transition shadow-sm truncate">Bulan Ini</button>
-                    <button onclick="setFinancialPeriod('today')" class="fin-period-btn py-2.5 rounded-xl bg-white text-bakery-900 border border-bakery-200 transition shadow-sm truncate">Hari Ini</button>
-                </div>
-
-                <div class="bg-white p-4.5 rounded-2xl shadow-sm border border-bakery-200 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h3 class="font-extrabold text-bakery-950 text-base tracking-tight">Buku Besar Transaksi</h3>
-                        <span class="text-[11px] text-bakery-800 font-bold">Aktif & Selesai</span>
-                    </div>
-                    <div id="financial-ledger-list" class="space-y-2.5 max-h-[340px] overflow-y-auto pr-1">
-                        <!-- Populated via JS -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 4: SETTING -->
-            <div id="tab-4" class="tab-pane p-4 space-y-4 hidden">
-                <div class="bg-gradient-to-br from-bakery-800 via-bakery-900 to-bakery-950 text-white p-6 rounded-2xl shadow-xl relative overflow-hidden text-center space-y-3 border border-bakery-700/60">
-                    <div class="absolute -right-8 -top-8 w-32 h-32 bg-bakery-500/20 rounded-full blur-xl pointer-events-none"></div>
-                    <div class="w-16 h-16 bg-bakery-500/30 border border-bakery-400/40 rounded-2xl mx-auto flex items-center justify-center text-bakery-300 shadow-inner">
-                        <i class="fa-solid fa-store text-2xl"></i>
-                    </div>
-                    <div>
-                        <h2 class="font-extrabold text-xl text-bakery-100 tracking-tight">Daily Bread</h2>
-                        <p class="text-xs text-bakery-300 mt-0.5 font-semibold">Artisan Bakery & Pre-Order System</p>
-                    </div>
-                    <div class="pt-2 flex justify-center space-x-3 text-[11px] text-bakery-200 border-t border-bakery-700/50 font-bold">
-                        <span><i class="fa-solid fa-bread-slice mr-1 text-bakery-400"></i>Made-to-Order • Tanpa Stok</span>
-                    </div>
-                </div>
-
-                <div class="bg-white p-4.5 rounded-2xl shadow-sm border border-bakery-200 space-y-3">
-                    <h3 class="font-extrabold text-bakery-950 text-base tracking-tight">Pengaturan Data & Cadangan</h3>
-                    <div class="grid grid-cols-2 gap-2.5 text-xs font-bold">
-                        <button onclick="exportDataJSON()" class="bg-bakery-100 hover:bg-bakery-200 text-bakery-950 p-3.5 rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm">
-                            <i class="fa-solid fa-download text-bakery-700"></i>
-                            <span>Backup</span>
-                        </button>
-                        <button onclick="resetAllData()" class="bg-red-50 hover:bg-red-100 text-red-700 p-3.5 rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm">
-                            <i class="fa-solid fa-trash-can"></i>
-                            <span>Reset</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
+        <!-- Main Dynamic View Area -->
+        <main class="flex-1 overflow-y-auto pb-24 relative bg-[#fdfbf7]" id="main-content">
+            <!-- Dynamic tab content gets injected here -->
         </main>
 
-        <!-- Four Bottom Navigation Tabs (Home, Booking, Profit & Loss, Setting) -->
-        <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-bakery-200 py-3 px-2 flex justify-around items-center z-30 shadow-2xl">
-            <button onclick="switchTab(1)" id="nav-btn-1" class="nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-2xl text-bakery-500 transition">
-                <i class="fa-solid fa-house text-2xl mb-0.5"></i>
-                <span class="text-[11px] font-extrabold tracking-tight">Home</span>
+        <!-- Bottom Navigation Bar -->
+        <nav class="absolute bottom-0 left-0 right-0 h-20 bg-white/95 backdrop-blur-md border-t border-bakery-100 px-3 flex items-center justify-around z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
+            <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center justify-center flex-1 py-1 text-bakery-600 transition group">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center transition group-hover:bg-bakery-50">
+                    <i class="fa-solid fa-house text-lg"></i>
+                </div>
+                <span class="text-[11px] font-semibold tracking-tight">Home</span>
             </button>
-            <button onclick="switchTab(2)" id="nav-btn-2" class="nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-2xl text-bakery-700 hover:text-bakery-950 transition">
-                <i class="fa-solid fa-book-bookmark text-2xl mb-0.5"></i>
-                <span class="text-[11px] font-extrabold tracking-tight">Booking</span>
+            <button onclick="switchTab('booking')" id="nav-booking" class="flex flex-col items-center justify-center flex-1 py-1 text-gray-400 transition group">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center transition group-hover:bg-bakery-50">
+                    <i class="fa-solid fa-calendar-days text-lg"></i>
+                </div>
+                <span class="text-[11px] font-medium tracking-tight">Booking</span>
             </button>
-            <button onclick="switchTab(3)" id="nav-btn-3" class="nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-2xl text-bakery-700 hover:text-bakery-950 transition">
-                <i class="fa-solid fa-chart-pie text-2xl mb-0.5"></i>
-                <span class="text-[11px] font-extrabold tracking-tight">Profit & Loss</span>
+            <button onclick="switchTab('pnl')" id="nav-pnl" class="flex flex-col items-center justify-center flex-1 py-1 text-gray-400 transition group">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center transition group-hover:bg-bakery-50">
+                    <i class="fa-solid fa-chart-pie text-lg"></i>
+                </div>
+                <span class="text-[11px] font-medium tracking-tight">P & L</span>
             </button>
-            <button onclick="switchTab(4)" id="nav-btn-4" class="nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-2xl text-bakery-700 hover:text-bakery-950 transition">
-                <i class="fa-solid fa-gear text-2xl mb-0.5"></i>
-                <span class="text-[11px] font-extrabold tracking-tight">Setting</span>
+            <button onclick="switchTab('setting')" id="nav-setting" class="flex flex-col items-center justify-center flex-1 py-1 text-gray-400 transition group">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center transition group-hover:bg-bakery-50">
+                    <i class="fa-solid fa-gear text-lg"></i>
+                </div>
+                <span class="text-[11px] font-medium tracking-tight">Setting</span>
             </button>
         </nav>
 
-        <!-- Order Modal (Popup for Made-to-Order Creation) -->
-        <div id="order-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-3 hidden">
-            <div class="bg-bakery-50 w-full sm:max-w-md max-h-[90vh] overflow-y-auto rounded-t-[32px] sm:rounded-2xl shadow-2xl p-5 space-y-4 animate-in fade-in slide-in-from-bottom duration-200 border border-bakery-200">
-                <div class="flex justify-between items-center border-b border-bakery-200 pb-3">
-                    <h3 id="order-modal-title" class="font-extrabold text-bakery-950 text-lg tracking-tight">Buat Pesanan Baru</h3>
-                    <button onclick="closeOrderModal()" class="w-8 h-8 rounded-full bg-bakery-200 flex items-center justify-center text-bakery-950 hover:bg-bakery-300 font-bold">
-                        <i class="fa-solid fa-xmark text-sm"></i>
-                    </button>
+        <!-- Global Notification Toast -->
+        <div id="toast" class="absolute top-16 left-4 right-4 bg-gray-900/95 text-white text-xs py-3 px-4 rounded-2xl shadow-xl flex items-center justify-between z-50 transform -translate-y-24 opacity-0 transition-all duration-300 pointer-events-none backdrop-blur">
+            <div class="flex items-center space-x-2.5">
+                <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+                <span id="toast-msg" class="font-medium">Berhasil disimpan</span>
+            </div>
+            <button onclick="hideToast()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- Quick Booking / Add Order Modal -->
+        <div id="booking-modal" class="absolute inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden transition-opacity">
+            <div class="bg-white w-full sm:max-w-md rounded-t-[32px] sm:rounded-[32px] max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-slide-up">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-bakery-50/50">
+                    <h3 class="font-bold text-gray-900 text-base" id="modal-title">Buat Booking Baru</h3>
+                    <button onclick="closeBookingModal()" class="w-8 h-8 rounded-full bg-gray-200/70 hover:bg-gray-300 flex items-center justify-center text-gray-600 transition"><i class="fa-solid fa-xmark text-sm"></i></button>
                 </div>
-                
-                <form id="order-form" onsubmit="saveOrder(event)" class="space-y-3.5 text-xs font-semibold">
-                    <input type="hidden" id="order-id">
-                    
+                <form id="booking-form" onsubmit="handleBookingSubmit(event)" class="p-6 overflow-y-auto space-y-4 flex-1">
+                    <input type="hidden" id="edit-booking-id">
                     <div>
-                        <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">Nama Pemesan</label>
-                        <input type="text" id="order-customer" required placeholder="Contoh: Ibu Siska" class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-3 font-bold focus:outline-none focus:border-bakery-500 text-bakery-950 text-xs">
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Pemesan</label>
+                        <input type="text" id="order-customer" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-bakery-500 font-medium" placeholder="Contoh: Ibu Siska">
                     </div>
-
-                    <div class="grid grid-cols-2 gap-2.5">
+                    <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">No. Telepon / WA</label>
-                            <input type="text" id="order-phone" required placeholder="08123456789" class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-3 font-bold focus:outline-none focus:border-bakery-500 text-bakery-950 text-xs">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Tanggal Kirim</label>
+                            <input type="date" id="order-date" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-bakery-500 font-medium">
                         </div>
                         <div>
-                            <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">Tgl Pengambilan</label>
-                            <input type="date" id="order-date" required class="w-full bg-white border border-bakery-200 rounded-xl px-3 py-3 font-bold focus:outline-none focus:border-bakery-500 text-bakery-950 text-xs">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Jam Ambil/Kirim</label>
+                            <input type="time" id="order-time" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-bakery-500 font-medium" value="10:00">
                         </div>
                     </div>
-
                     <div>
-                        <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">Pilih Menu Roti</label>
-                        <select id="order-product-select" onchange="onProductSelectChange()" required class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-3 font-bold focus:outline-none focus:border-bakery-500 text-bakery-950 text-xs">
-                            <!-- Populated via JS -->
-                        </select>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2.5">
-                        <div>
-                            <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">Jumlah (Porsi/Loyang)</label>
-                            <input type="number" id="order-qty" min="1" value="1" oninput="calculateOrderTotal()" required class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-3 font-bold focus:outline-none focus:border-bakery-500 text-bakery-950 text-xs">
-                        </div>
-                        <div>
-                            <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">Harga Jual Satuan (Rp)</label>
-                            <input type="number" id="order-price" min="0" oninput="calculateOrderTotal()" required class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-3 font-bold focus:outline-none focus:border-bakery-500 text-bakery-950 text-xs">
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Pilih Menu Roti / Kue</label>
+                        <div id="modal-menu-items" class="space-y-2 max-h-40 overflow-y-auto pr-1 border border-gray-100 rounded-xl p-2 bg-gray-50/50">
+                            <!-- Populated dynamically -->
                         </div>
                     </div>
-
-                    <div class="bg-bakery-100 p-3.5 rounded-xl flex justify-between items-center border border-bakery-200">
+                    <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <p class="text-[10px] text-bakery-800 font-extrabold uppercase">Total Tagihan</p>
-                            <p id="order-total-preview" class="font-extrabold text-sm text-bakery-950 truncate">Rp 0</p>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Jumlah (Qty)</label>
+                            <input type="number" id="order-qty" min="1" value="1" required oninput="calculateModalTotal()" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-bakery-500 font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Status Pesanan</label>
+                            <select id="order-status" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-bakery-500 font-medium">
+                                <option value="Pending">Pending</option>
+                                <option value="Proses">Diproses</option>
+                                <option value="Selesai">Selesai</option>
+                                <option value="Batal">Dibatalkan</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="bg-bakery-50/60 p-3.5 rounded-2xl border border-bakery-200 flex items-center justify-between">
+                        <div>
+                            <p class="text-[11px] text-bakery-700 font-medium">Estimasi Total Tagihan</p>
+                            <p class="text-base font-bold text-bakery-900" id="modal-total-preview">Rp 0</p>
                         </div>
                         <div class="text-right">
-                            <p class="text-[10px] text-bakery-800 font-extrabold uppercase">Estimasi HPP</p>
-                            <p id="order-hpp-preview" class="font-extrabold text-xs text-orange-800 truncate">Rp 0</p>
+                            <p class="text-[11px] text-gray-500 font-medium">Estimasi HPP</p>
+                            <p class="text-xs font-bold text-gray-700" id="modal-hpp-preview">Rp 0</p>
                         </div>
                     </div>
-
-                    <div class="grid grid-cols-2 gap-2.5">
-                        <div>
-                            <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">Status Pesanan</label>
-                            <select id="order-status" class="w-full bg-white border border-bakery-200 rounded-xl px-3 py-3 font-bold focus:outline-none text-bakery-950 text-xs truncate">
-                                <option value="Pending">Pending</option>
-                                <option value="Diproses">Diproses</option>
-                                <option value="Selesai">Selesai</option>
-                                <option value="Dibatalkan">Dibatalkan</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">Status Bayar</label>
-                            <select id="order-payment" class="w-full bg-white border border-bakery-200 rounded-xl px-3 py-3 font-bold focus:outline-none text-bakery-950 text-xs truncate">
-                                <option value="Belum Bayar">Belum Bayar</option>
-                                <option value="DP">DP (Uang Muka)</option>
-                                <option value="Lunas">Lunas</option>
-                            </select>
-                        </div>
-                    </div>
-
                     <div>
-                        <label class="block font-bold text-bakery-950 mb-1 uppercase tracking-wide text-[11px]">Catatan Khusus (Opsional)</label>
-                        <textarea id="order-notes" placeholder="Contoh: Tulisan Happy Birthday coklat" rows="2" class="w-full bg-white border border-bakery-200 rounded-xl px-3.5 py-2.5 font-bold focus:outline-none focus:border-bakery-500 text-bakery-950 text-xs"></textarea>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Catatan Khusus (Opsional)</label>
+                        <input type="text" id="order-notes" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-bakery-500 font-medium" placeholder="Misal: Tanpa taburan keju, ucapan selamat ulang tahun">
                     </div>
-
-                    <div class="pt-2 flex space-x-2.5">
-                        <button type="button" onclick="closeOrderModal()" class="flex-1 bg-bakery-200 text-bakery-950 py-3.5 rounded-xl font-bold hover:bg-bakery-300 transition text-xs">Batal</button>
-                        <button type="submit" class="flex-1 bg-bakery-500 text-white py-3.5 rounded-xl font-bold hover:bg-bakery-600 transition shadow-md text-xs">Simpan</button>
+                    <div class="pt-2">
+                        <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-bakery-600 to-bakery-700 hover:from-bakery-700 hover:to-bakery-800 text-white rounded-2xl font-bold shadow-lg shadow-bakery-600/30 transition text-sm">
+                            Simpan Booking
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- Custom Toast Notification Box -->
-        <div id="toast" class="absolute top-16 left-1/2 transform -translate-x-1/2 bg-bakery-950 text-bakery-100 px-5 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center space-x-2.5 opacity-0 pointer-events-none transition-opacity duration-300 z-50 border border-bakery-700">
-            <i class="fa-solid fa-circle-check text-bakery-400 text-base"></i>
-            <span id="toast-msg">Berhasil disimpan</span>
+        <!-- Menu Item Add/Edit Modal (Setting Tab) -->
+        <div id="menu-modal" class="absolute inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden transition-opacity">
+            <div class="bg-white w-full sm:max-w-md rounded-t-[32px] sm:rounded-[32px] max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-bakery-50/50">
+                    <h3 class="font-bold text-gray-900 text-base" id="menu-modal-title">Tambah Menu Baru</h3>
+                    <button onclick="closeMenuModal()" class="w-8 h-8 rounded-full bg-gray-200/70 hover:bg-gray-300 flex items-center justify-center text-gray-600 transition"><i class="fa-solid fa-xmark text-sm"></i></button>
+                </div>
+                <form id="menu-form" onsubmit="handleMenuSubmit(event)" class="p-6 overflow-y-auto space-y-4 flex-1">
+                    <input type="hidden" id="edit-menu-id">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Produk / Roti</label>
+                        <input type="text" id="menu-name" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-bakery-500 font-medium" placeholder="Misal: Sourdough Loaf 500g">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Kategori</label>
+                        <select id="menu-category" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-bakery-500 font-medium">
+                            <option value="Roti Artisanal">Roti Artisanal</option>
+                            <option value="Pastry & Croissant">Pastry & Croissant</option>
+                            <option value="Cake & Tart">Cake & Tart</option>
+                            <option value="Cookies & Snack">Cookies & Snack</option>
+                            <option value="Minuman">Minuman</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">HPP (Modal) - Rp</label>
+                            <input type="number" id="menu-hpp" min="0" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-bakery-500 font-medium" placeholder="12000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Harga Jual - Rp</label>
+                            <input type="number" id="menu-price" min="0" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-bakery-500 font-medium" placeholder="22000">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Deskripsi Singkat</label>
+                        <input type="text" id="menu-desc" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-bakery-500 font-medium" placeholder="Dibuat dengan ragi alami...">
+                    </div>
+                    <div class="pt-2">
+                        <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-bakery-600 to-bakery-700 hover:from-bakery-700 hover:to-bakery-800 text-white rounded-2xl font-bold shadow-lg shadow-bakery-600/30 transition text-sm">
+                            Simpan Menu
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
 
     </div>
 
-    <!-- Application JavaScript Logic -->
     <script>
-        const DEFAULT_MENU = [
-            { id: 'm1', name: 'Tart Coklat Ganache Spesial', category: 'Tart & Cake', price: 220000, hpp: 120000 },
-            { id: 'm2', name: 'Chiffon Pandan Keju Lembut', category: 'Chiffon & Sponge', price: 85000, hpp: 45000 },
-            { id: 'm3', name: 'Roti Sisir Mentega Jadul', category: 'Roti Sisir', price: 35000, hpp: 18000 },
-            { id: 'm4', name: 'Brownies Panggang Almond Fudgy', category: 'Brownies', price: 95000, hpp: 50000 }
-        ];
-
-        const todayDateStr = new Date().toISOString().split('T')[0];
-        const tomorrowDate = new Date(Date.now() + 86400000).toISOString().split('T')[0];
-
-        const DEFAULT_ORDERS = [
-            {
-                id: 'ord-1',
-                customer: 'Ibu Ratna',
-                phone: '081298765432',
-                date: todayDateStr,
-                product: 'Tart Coklat Ganache Spesial',
-                qty: 1,
-                price: 220000,
-                hpp: 120000,
-                status: 'Diproses',
-                payment: 'DP',
-                notes: 'Ulang tahun anak, lilin angka 7'
-            },
-            {
-                id: 'ord-2',
-                customer: 'Bpk. Hendra',
-                phone: '081345678901',
-                date: tomorrowDate,
-                product: 'Roti Sisir Mentega Jadul',
-                qty: 4,
-                price: 35000,
-                hpp: 18000,
-                status: 'Pending',
-                payment: 'Lunas',
-                notes: 'Ambil jam 10 pagi'
-            }
-        ];
-
-        let menuItems = JSON.parse(localStorage.getItem('daily_bread_menu')) || DEFAULT_MENU;
-        let orders = JSON.parse(localStorage.getItem('daily_bread_orders')) || DEFAULT_ORDERS;
+        // --- Application State ---
+        let currentTab = 'home';
         let privacyMode = false;
-        let currentFinPeriod = 'all';
 
-        function saveData() {
-            localStorage.setItem('daily_bread_menu', JSON.stringify(menuItems));
-            localStorage.setItem('daily_bread_orders', JSON.stringify(orders));
-            refreshAllViews();
-        }
+        // Default Menus
+        let menuItems = [
+            { id: 1, name: 'Sourdough Country Loaf', category: 'Roti Artisanal', hpp: 18000, price: 35000, desc: 'Classic fermented sourdough bread' },
+            { id: 2, name: 'Butter Croissant', category: 'Pastry & Croissant', hpp: 7500, price: 16000, desc: 'Flaky and buttery French pastry' },
+            { id: 3, name: 'Choco Lava Danish', category: 'Pastry & Croissant', hpp: 9000, price: 19000, desc: 'Rich chocolate pastry' },
+            { id: 4, name: 'Japanese Milk Bread', category: 'Roti Artisanal', hpp: 14000, price: 28000, desc: 'Soft and fluffy shokupan loaf' },
+            { id: 5, name: 'Almond Croissant', category: 'Pastry & Croissant', hpp: 11000, price: 24000, desc: 'Filled with almond cream and sliced almonds' },
+            { id: 6, name: 'Fudge Brownie Slice', category: 'Cake & Tart', hpp: 8000, price: 18000, desc: 'Dense dark chocolate fudge brownie' }
+        ];
 
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-msg').innerText = message;
-            toast.classList.remove('opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'pointer-events-none');
-            }, 2500);
-        }
+        // Default Bookings (including dates around today)
+        const todayDateObj = new Date();
+        const formatDateStr = (d) => {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
 
+        const todayStr = formatDateStr(todayDateObj);
+        
+        let bookings = [
+            { id: 101, customer: 'Bpk. Budi Santoso', date: todayStr, time: '08:30', menuId: 1, qty: 3, status: 'Proses', notes: 'Iris tebal' },
+            { id: 102, customer: 'Ibu Ratna', date: todayStr, time: '10:00', menuId: 2, qty: 10, status: 'Selesai', notes: 'Box isi 10' },
+            { id: 103, customer: 'Cafe Senja', date: todayStr, time: '14:15', menuId: 4, qty: 5, status: 'Pending', notes: 'Langsungantar' },
+            { id: 104, customer: 'Anisa Maharani', date: formatDateStr(new Date(todayDateObj.getTime() + 86400000)), time: '09:00', menuId: 5, qty: 4, status: 'Pending', notes: 'Untuk ulang tahun' },
+            { id: 105, customer: 'Pak Joko', date: formatDateStr(new Date(todayDateObj.getTime() + 2 * 86400000)), time: '11:30', menuId: 3, qty: 6, status: 'Proses', notes: '' },
+            { id: 106, customer: 'Hotel Merdeka', date: formatDateStr(new Date(todayDateObj.getTime() - 86400000)), time: '07:00', menuId: 1, qty: 15, status: 'Selesai', notes: 'Breakfast supply' },
+        ];
+
+        // Format Currency Helper
         function formatIDR(amount) {
             if (privacyMode) return 'Rp ••••••';
             return 'Rp ' + Number(amount).toLocaleString('id-ID');
         }
 
-        function switchTab(tabNum) {
-            for (let i = 1; i <= 4; i++) {
-                document.getElementById(`tab-${i}`).classList.add('hidden');
-                const btn = document.getElementById(`nav-btn-${i}`);
-                btn.classList.remove('text-bakery-500');
-                btn.classList.add('text-bakery-700');
-            }
-            document.getElementById(`tab-${tabNum}`).classList.remove('hidden');
-            const activeBtn = document.getElementById(`nav-btn-${tabNum}`);
-            activeBtn.classList.remove('text-bakery-700');
-            activeBtn.classList.add('text-bakery-500');
-            refreshAllViews();
+        // Toggle Privacy Mask
+        function togglePrivacy() {
+            privacyMode = !privacyMode;
+            const icon = document.getElementById('privacy-icon');
+            icon.className = privacyMode ? 'fa-solid fa-eye-slash text-sm' : 'fa-solid fa-eye text-sm';
+            renderCurrentTab();
         }
 
-        function renderSevenDayOrders() {
-            const container = document.getElementById('seven-day-list');
-            container.innerHTML = '';
+        // Toast notification helper
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastIcon = document.getElementById('toast-icon');
+            toastMsg.innerText = msg;
+            toastIcon.className = isError ? 'fa-solid fa-circle-exclamation text-red-400 text-sm' : 'fa-solid fa-circle-check text-emerald-400 text-sm';
+            toast.classList.remove('-translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => hideToast(), 3000);
+        }
 
-            const today = new Date();
-            today.setHours(0,0,0,0);
-            
-            let daysMap = {};
-            for(let i = 0; i < 7; i++) {
-                let d = new Date(today);
-                d.setDate(today.getDate() + i);
-                let dateStr = d.toISOString().split('T')[0];
-                daysMap[dateStr] = {
-                    dateObj: d,
-                    label: i === 0 ? 'Hari Ini' : i === 1 ? 'Besok' : d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' }),
-                    orders: []
-                };
-            }
+        function hideToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-0', 'opacity-100');
+            toast.classList.add('-translate-y-24', 'opacity-0');
+        }
 
-            orders.forEach(ord => {
-                if(daysMap[ord.date]) {
-                    daysMap[ord.date].orders.push(ord);
-                }
-            });
-
-            let html = '';
-
-            Object.keys(daysMap).forEach(dateKey => {
-                let dayData = daysMap[dateKey];
-                let dayOrders = dayData.orders;
-                let isToday = dateKey === today.toISOString().split('T')[0];
-
-                html += `
-                    <div class="bg-white rounded-2xl p-4 shadow-sm border ${isToday ? 'border-bakery-500 ring-2 ring-bakery-500/30' : 'border-bakery-200'} space-y-3">
-                        <div class="flex justify-between items-center border-b border-bakery-100 pb-2">
-                            <div class="flex items-center space-x-2">
-                                <span class="w-2.5 h-2.5 rounded-full ${isToday ? 'bg-bakery-500 animate-pulse' : 'bg-bakery-300'}"></span>
-                                <h4 class="font-extrabold text-bakery-950 text-sm tracking-tight">${dayData.label}</h4>
-                                <span class="text-[10px] text-bakery-800 bg-bakery-100 px-2 py-0.5 rounded-full font-bold">${dateKey}</span>
-                            </div>
-                            <span class="text-[11px] font-extrabold text-bakery-900">${dayOrders.length} Pesanan</span>
-                        </div>
-                `;
-
-                if (dayOrders.length === 0) {
-                    html += `<p class="text-[11px] text-bakery-800 italic py-2 text-center font-bold">Tidak ada pre-order.</p>`;
+        // Tab Switcher
+        function switchTab(tabName) {
+            currentTab = tabName;
+            ['home', 'booking', 'pnl', 'setting'].forEach(t => {
+                const btn = document.getElementById(`nav-${t}`);
+                if (t === tabName) {
+                    btn.className = 'flex flex-col items-center justify-center flex-1 py-1 text-bakery-600 transition group font-bold';
+                    btn.querySelector('div').className = 'w-10 h-10 rounded-full bg-bakery-50 flex items-center justify-center transition';
+                    btn.querySelector('span').className = 'text-[11px] font-bold tracking-tight text-bakery-700';
                 } else {
-                    html += `<div class="space-y-2.5">`;
-                    dayOrders.forEach(ord => {
-                        let statusColor = ord.status === 'Selesai' ? 'bg-green-100 text-green-900 font-extrabold' : ord.status === 'Diproses' ? 'bg-blue-100 text-blue-900 font-extrabold' : ord.status === 'Dibatalkan' ? 'bg-red-100 text-red-900 font-extrabold' : 'bg-amber-100 text-amber-900 font-extrabold';
-                        let payColor = ord.payment === 'Lunas' ? 'text-green-800 font-extrabold' : ord.payment === 'DP' ? 'text-blue-800 font-extrabold' : 'text-amber-800 font-extrabold';
-                        
-                        html += `
-                            <div class="bg-bakery-50 border border-bakery-200 p-3.5 rounded-xl flex flex-col space-y-2.5 safe-text-wrap">
-                                <div class="flex justify-between items-start gap-2">
-                                    <div class="min-w-0 flex-1">
-                                        <div class="flex items-center space-x-1.5 flex-wrap">
-                                            <span class="font-extrabold text-bakery-950 text-xs">${ord.customer}</span>
-                                            <span class="text-[10px] text-bakery-800 font-bold">(${ord.phone})</span>
-                                        </div>
-                                        <p class="text-xs font-bold text-bakery-900 mt-0.5">${ord.product} <span class="text-bakery-800 font-extrabold">(${ord.qty}x)</span></p>
-                                    </div>
-                                    <span class="text-[10px] px-2.5 py-0.5 rounded-full ${statusColor} shrink-0">${ord.status}</span>
-                                </div>
-                                
-                                ${ord.notes ? `<p class="text-[11px] text-bakery-900 italic bg-white p-2 rounded-lg border border-bakery-100 font-bold"><i class="fa-solid fa-note-sticky mr-1 text-bakery-500"></i>${ord.notes}</p>` : ''}
-                                
-                                <div class="flex justify-between items-center pt-2 border-t border-bakery-200/70 text-xs">
-                                    <div class="truncate mr-2">
-                                        <span class="text-bakery-800 font-bold text-[10px]">Bayar:</span>
-                                        <span class="${payColor} text-[10px]">${ord.payment}</span>
-                                        <span class="mx-1 text-bakery-300">|</span>
-                                        <span class="font-extrabold text-bakery-950">${formatIDR(ord.price * ord.qty)}</span>
-                                    </div>
-                                    <div class="flex space-x-1.5 shrink-0">
-                                        <button onclick="editOrder('${ord.id}')" class="bg-white hover:bg-bakery-200 text-bakery-950 px-2.5 py-1.5 rounded-lg border border-bakery-200 font-bold transition flex items-center space-x-1 text-[11px] shadow-sm">
-                                            <i class="fa-solid fa-pen text-[10px]"></i><span>Edit</span>
-                                        </button>
-                                        <button onclick="deleteOrder('${ord.id}')" class="bg-white hover:bg-red-50 text-red-700 px-2.5 py-1.5 rounded-lg border border-bakery-200 font-bold transition flex items-center space-x-1 text-[11px] shadow-sm">
-                                            <i class="fa-solid fa-trash text-[10px]"></i><span>Hapus</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    html += `</div>`;
+                    btn.className = 'flex flex-col items-center justify-center flex-1 py-1 text-gray-400 transition group';
+                    btn.querySelector('div').className = 'w-10 h-10 rounded-full flex items-center justify-center transition group-hover:bg-bakery-50';
+                    btn.querySelector('span').className = 'text-[11px] font-medium tracking-tight text-gray-500';
                 }
-
-                html += `</div>`;
             });
-
-            container.innerHTML = html;
+            renderCurrentTab();
         }
 
-        function renderBookingsList() {
-            const container = document.getElementById('all-bookings-list');
-            const search = document.getElementById('search-booking-input').value.toLowerCase();
-            const statusFilter = document.getElementById('status-filter-select').value;
-            const paymentFilter = document.getElementById('payment-filter-select').value;
+        function renderCurrentTab() {
+            const container = document.getElementById('main-content');
+            if (currentTab === 'home') renderHomeTab(container);
+            else if (currentTab === 'booking') renderBookingTab(container);
+            else if (currentTab === 'pnl') renderPnlTab(container);
+            else if (currentTab === 'setting') renderSettingTab(container);
+        }
 
-            let filtered = orders.filter(ord => {
-                let matchSearch = ord.customer.toLowerCase().includes(search) || ord.product.toLowerCase().includes(search) || ord.phone.includes(search);
-                let matchStatus = statusFilter === 'all' || ord.status === statusFilter;
-                let matchPayment = paymentFilter === 'all' || ord.payment === paymentFilter;
-                return matchSearch && matchStatus && matchPayment;
-            });
-
-            filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
-            document.getElementById('total-bookings-count').innerText = `${filtered.length} Pesanan`;
-
-            if (filtered.length === 0) {
-                container.innerHTML = `<div class="bg-white p-5 rounded-2xl text-center text-xs font-bold text-bakery-800 border border-bakery-200">Tidak ada booking yang ditemukan.</div>`;
-                return;
+        // --- 1. HOME TAB (7-Day Chronological Schedule & Quick Booking) ---
+        function renderHomeTab(container) {
+            // Generate 7 days (Past 1 day, Today, Next 5 days)
+            let daysList = [];
+            for (let i = -1; i <= 5; i++) {
+                let d = new Date();
+                d.setDate(d.getDate() + i);
+                daysList.push({
+                    dateObj: d,
+                    dateStr: formatDateStr(d),
+                    dayName: d.toLocaleDateString('id-ID', { weekday: 'short' }),
+                    dayNum: d.getDate(),
+                    monthName: d.toLocaleDateString('id-ID', { month: 'short' }),
+                    isToday: i === 0
+                });
             }
 
-            let html = '';
-            filtered.forEach(ord => {
-                let statusColor = ord.status === 'Selesai' ? 'bg-green-100 text-green-900 font-extrabold' : ord.status === 'Diproses' ? 'bg-blue-100 text-blue-900 font-extrabold' : ord.status === 'Dibatalkan' ? 'bg-red-100 text-red-900 font-extrabold' : 'bg-amber-100 text-amber-900 font-extrabold';
+            let todayRevenue = 0;
+            let todayOrdersCount = 0;
+            bookings.forEach(b => {
+                if (b.date === todayStr && b.status !== 'Batal') {
+                    const menu = menuItems.find(m => m.id == b.menuId);
+                    if (menu) todayRevenue += menu.price * b.qty;
+                    todayOrdersCount++;
+                }
+            });
+
+            let html = `
+                <div class="p-4 space-y-4">
+                    <!-- Daily Summary Banner -->
+                    <div class="bg-gradient-to-br from-bakery-500 to-bakery-700 rounded-3xl p-5 text-white shadow-xl relative overflow-hidden">
+                        <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full pointer-events-none"></div>
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <p class="text-xs uppercase tracking-wider text-bakery-100 font-semibold">Jadwal Hari Ini</p>
+                                <h2 class="text-xl font-bold tracking-tight">${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</h2>
+                            </div>
+                            <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-bold backdrop-blur">${todayOrdersCount} Pesanan</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 pt-2 border-t border-white/15">
+                            <div>
+                                <p class="text-[11px] text-bakery-100">Potensi Omset Hari Ini</p>
+                                <p class="text-lg font-extrabold">${formatIDR(todayRevenue)}</p>
+                            </div>
+                            <div class="text-right">
+                                <button onclick="openQuickBookingModal()" class="bg-white text-bakery-800 text-xs font-bold px-4 py-2.5 rounded-2xl shadow hover:bg-bakery-50 transition inline-flex items-center space-x-1.5 mt-1">
+                                    <i class="fa-solid fa-plus text-bakery-600"></i>
+                                    <span>Booking Cepat</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 7-Day Horizontal Date Bar -->
+                    <div class="bg-white rounded-3xl p-3.5 shadow-sm border border-bakery-100">
+                        <p class="text-xs font-bold text-gray-700 mb-2 px-1 flex items-center justify-between">
+                            <span><i class="fa-solid fa-calendar-week text-bakery-500 mr-1.5"></i> Kalender 7 Hari Kedepan</span>
+                            <span class="text-[10px] text-gray-400 font-normal">Geser untuk melihat</span>
+                        </p>
+                        <div class="flex space-x-2 overflow-x-auto hide-scrollbar pb-1">
+            `;
+
+            daysList.forEach(day => {
+                const dayOrders = bookings.filter(b => b.date === day.dateStr && b.status !== 'Batal');
+                const isSelected = (day.dateStr === selectedDateFilter);
                 
                 html += `
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-bakery-200 space-y-2.5 safe-text-wrap">
-                        <div class="flex justify-between items-start gap-2">
-                            <div class="min-w-0 flex-1">
-                                <span class="text-[10px] text-bakery-800 font-extrabold">${ord.date}</span>
-                                <h4 class="font-extrabold text-bakery-950 text-xs mt-0.5 truncate">${ord.customer} <span class="font-bold text-bakery-800 text-[10px]">(${ord.phone})</span></h4>
-                            </div>
-                            <span class="text-[10px] px-2.5 py-0.5 rounded-full ${statusColor} shrink-0">${ord.status}</span>
-                        </div>
-                        <div class="bg-bakery-50 p-3 rounded-xl flex justify-between items-center text-xs gap-2">
-                            <div class="min-w-0 flex-1">
-                                <p class="font-bold text-bakery-950 text-xs truncate">${ord.product} <span class="text-bakery-800 font-bold">(${ord.qty}x)</span></p>
-                                <p class="text-[10px] text-bakery-800 font-bold mt-0.5">Bayar: <span class="text-bakery-950 font-extrabold">${ord.payment}</span></p>
-                            </div>
-                            <div class="text-right shrink-0">
-                                <p class="font-extrabold text-bakery-950 text-xs">${formatIDR(ord.price * ord.qty)}</p>
-                                <p class="text-[10px] text-orange-800 font-bold">HPP: ${formatIDR(ord.hpp * ord.qty)}</p>
-                            </div>
-                        </div>
-                        <div class="flex justify-end space-x-1.5 pt-1">
-                            <button onclick="editOrder('${ord.id}')" class="bg-bakery-100 hover:bg-bakery-200 text-bakery-950 px-2.5 py-1 rounded-lg text-[11px] font-bold transition flex items-center space-x-1 shadow-sm">
-                                <i class="fa-solid fa-pen text-[10px]"></i><span>Edit</span>
-                            </button>
-                            <button onclick="deleteOrder('${ord.id}')" class="bg-red-50 hover:bg-red-100 text-red-700 px-2.5 py-1 rounded-lg text-[11px] font-bold transition flex items-center space-x-1 shadow-sm">
-                                <i class="fa-solid fa-trash text-[10px]"></i><span>Hapus</span>
-                            </button>
+                    <div onclick="filterHomeDate('${day.dateStr}')" class="flex-shrink-0 w-16 py-3 px-1 rounded-2xl text-center cursor-pointer transition border ${day.isToday ? 'border-bakery-500' : 'border-gray-100'} ${isSelected ? 'bg-bakery-600 text-white shadow-md' : 'bg-gray-50/80 hover:bg-bakery-50 text-gray-800'}">
+                        <p class="text-[10px] font-semibold uppercase ${isSelected ? 'text-bakery-100' : 'text-gray-500'}">${day.dayName}</p>
+                        <p class="text-base font-extrabold my-0.5 ${isSelected ? 'text-white' : 'text-gray-900'}">${day.dayNum}</p>
+                        <p class="text-[10px] ${isSelected ? 'text-bakery-100' : 'text-gray-400'}">${day.monthName}</p>
+                        <div class="mt-2 flex items-center justify-center">
+                            <span class="px-1.5 py-0.5 rounded-full text-[9px] font-bold ${dayOrders.length > 0 ? (isSelected ? 'bg-white text-bakery-700' : 'bg-bakery-100 text-bakery-700') : 'bg-gray-200 text-gray-500'}">${dayOrders.length} ord</span>
                         </div>
                     </div>
                 `;
             });
 
+            html += `
+                        </div>
+                    </div>
+
+                    <!-- Vertical Chronological Timeline for Selected Date -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between px-1">
+                            <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide">
+                                <i class="fa-solid fa-clock-rotate-left text-bakery-500 mr-1.5"></i> Jadwal Pesanan (${formatDisplayDate(selectedDateFilter)})
+                            </h3>
+                            <button onclick="resetHomeDate()" class="text-xs text-bakery-600 font-bold hover:underline">Hari Ini</button>
+                        </div>
+            `;
+
+            const filteredBookings = bookings.filter(b => b.date === selectedDateFilter).sort((a,b) => a.time.localeCompare(b.time));
+
+            if (filteredBookings.length === 0) {
+                html += `
+                    <div class="bg-white rounded-3xl p-8 text-center border border-gray-100 shadow-sm">
+                        <div class="w-12 h-12 bg-bakery-50 rounded-full flex items-center justify-center mx-auto mb-3 text-bakery-500">
+                            <i class="fa-solid fa-mug-hot text-xl"></i>
+                        </div>
+                        <p class="text-sm font-bold text-gray-800">Tidak ada pesanan</p>
+                        <p class="text-xs text-gray-400 mt-1">Belum ada booking roti untuk tanggal ini.</p>
+                        <button onclick="openQuickBookingModalWithDate('${selectedDateFilter}')" class="mt-4 px-4 py-2 bg-bakery-600 text-white rounded-xl text-xs font-bold shadow hover:bg-bakery-700 transition">
+                            + Tambah Pesanan Tanggal Ini
+                        </button>
+                    </div>
+                `;
+            } else {
+                filteredBookings.forEach(order => {
+                    const menu = menuItems.find(m => m.id == order.menuId) || { name: 'Menu Dihapus', price: 0 };
+                    const totalPrice = menu.price * order.qty;
+                    
+                    let statusBadge = '';
+                    if (order.status === 'Pending') statusBadge = 'bg-amber-100 text-amber-800 border-amber-200';
+                    else if (order.status === 'Proses') statusBadge = 'bg-blue-100 text-blue-800 border-blue-200';
+                    else if (order.status === 'Selesai') statusBadge = 'bg-emerald-100 text-emerald-800 border-emerald-200';
+                    else statusBadge = 'bg-red-100 text-red-800 border-red-200';
+
+                    html += `
+                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-start justify-between relative hover:border-bakery-300 transition">
+                            <div class="absolute left-0 top-3 bottom-3 w-1.5 rounded-r-full ${order.status === 'Selesai' ? 'bg-emerald-500' : order.status === 'Proses' ? 'bg-blue-500' : 'bg-amber-500'}"></div>
+                            <div class="pl-2.5 flex-1">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-xs font-bold text-bakery-700 bg-bakery-50 px-2 py-0.5 rounded-lg">
+                                        <i class="fa-regular fa-clock mr-1"></i> ${order.time} WIB
+                                    </span>
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full font-bold border ${statusBadge}">${order.status}</span>
+                                </div>
+                                <h4 class="font-bold text-gray-900 text-sm mt-1">${order.customer}</h4>
+                                <p class="text-xs font-semibold text-gray-700 mt-0.5">${order.qty}x ${menu.name}</p>
+                                ${order.notes ? `<p class="text-[11px] text-gray-500 italic mt-1 bg-gray-50 px-2.5 py-1 rounded-xl border border-gray-100"><i class="fa-solid fa-note-sticky mr-1 text-bakery-400"></i> ${order.notes}</p>` : ''}
+                            </div>
+                            <div class="text-right ml-3 shrink-0 flex flex-col items-end justify-between self-stretch">
+                                <span class="text-xs font-extrabold text-bakery-900">${formatIDR(totalPrice)}</span>
+                                <div class="flex space-x-1 mt-auto">
+                                    <button onclick="editBooking(${order.id})" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-bakery-100 text-gray-600 hover:text-bakery-700 flex items-center justify-center text-xs transition" title="Edit">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                    <button onclick="deleteBooking(${order.id})" class="w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center text-xs transition" title="Hapus">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            html += `
+                    </div>
+                </div>
+            `;
             container.innerHTML = html;
         }
 
-        function togglePrivacyMode() {
-            privacyMode = !privacyMode;
-            document.getElementById('privacy-icon').className = privacyMode ? "fa-solid fa-eye-slash text-xs" : "fa-solid fa-eye text-xs";
-            document.getElementById('privacy-text').innerText = privacyMode ? "Sembunyikan" : "Tampil";
-            refreshAllViews();
+        let selectedDateFilter = todayStr;
+        function filterHomeDate(dateStr) {
+            selectedDateFilter = dateStr;
+            renderCurrentTab();
+        }
+        function resetHomeDate() {
+            selectedDateFilter = todayStr;
+            renderCurrentTab();
+        }
+        function formatDisplayDate(dateStr) {
+            const parts = dateStr.split('-');
+            const d = new Date(parts[0], parts[1] - 1, parts[2]);
+            return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
         }
 
-        function setFinancialPeriod(period) {
-            currentFinPeriod = period;
-            const buttons = document.querySelectorAll('.fin-period-btn');
-            buttons.forEach(b => {
-                b.classList.remove('bg-bakery-800', 'text-white');
-                b.classList.add('bg-white', 'text-bakery-900', 'border', 'border-bakery-200');
+
+        // --- 2. BOOKING TAB (Full Order Management, Search, Filters) ---
+        let bookingSearchQuery = '';
+        let bookingStatusFilter = 'ALL';
+
+        function renderBookingTab(container) {
+            let html = `
+                <div class="p-4 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-lg font-extrabold text-gray-900 tracking-tight">Kelola Booking</h2>
+                        <button onclick="openQuickBookingModal()" class="px-3.5 py-2 bg-bakery-600 text-white rounded-xl text-xs font-bold shadow hover:bg-bakery-700 transition flex items-center space-x-1.5">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Tambah Booking</span>
+                        </button>
+                    </div>
+
+                    <!-- Search & Filter Controls -->
+                    <div class="space-y-2.5">
+                        <div class="relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-400 text-sm"></i>
+                            <input type="text" id="booking-search-input" value="${bookingSearchQuery}" oninput="handleBookingSearch(this.value)" placeholder="Cari nama pemesan atau menu roti..." class="w-full bg-white border border-gray-200 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-gray-800 focus:outline-none focus:border-bakery-500 font-medium shadow-sm">
+                        </div>
+                        <div class="flex space-x-1.5 overflow-x-auto hide-scrollbar pb-1">
+            `;
+
+            const statuses = ['ALL', 'Pending', 'Proses', 'Selesai', 'Batal'];
+            statuses.forEach(st => {
+                const isActive = bookingStatusFilter === st;
+                const label = st === 'ALL' ? 'Semua Status' : st;
+                html += `
+                    <button onclick="filterBookingStatus('${st}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition border ${isActive ? 'bg-bakery-600 text-white border-bakery-600 shadow' : 'bg-white text-gray-600 border-gray-200 hover:bg-bakery-50'}">
+                        ${label}
+                    </button>
+                `;
             });
-            event.target.classList.remove('bg-white', 'text-bakery-900', 'border');
-            event.target.classList.add('bg-bakery-800', 'text-white');
-            renderFinancialDashboard();
-        }
 
-        function renderFinancialDashboard() {
-            let filteredOrders = orders.filter(o => o.status !== 'Dibatalkan');
-            const todayStr = new Date().toISOString().split('T')[0];
-            const currentMonthStr = todayStr.substring(0, 7);
+            html += `
+                        </div>
+                    </div>
 
-            if (currentFinPeriod === 'today') {
-                filteredOrders = filteredOrders.filter(o => o.date === todayStr);
-            } else if (currentFinPeriod === 'month') {
-                filteredOrders = filteredOrders.filter(o => o.date.startsWith(currentMonthStr));
+                    <!-- Booking List -->
+                    <div class="space-y-3">
+            `;
+
+            let filtered = bookings.filter(b => {
+                const menu = menuItems.find(m => m.id == b.menuId) || { name: '' };
+                const matchSearch = b.customer.toLowerCase().includes(bookingSearchQuery.toLowerCase()) || menu.name.toLowerCase().includes(bookingSearchQuery.toLowerCase());
+                const matchStatus = bookingStatusFilter === 'ALL' || b.status === bookingStatusFilter;
+                return matchSearch && matchStatus;
+            }).sort((a,b) => b.date.localeCompare(a.date));
+
+            if (filtered.length === 0) {
+                html += `
+                    <div class="bg-white rounded-3xl p-8 text-center border border-gray-100 shadow-sm">
+                        <i class="fa-solid fa-folder-open text-gray-300 text-3xl mb-2"></i>
+                        <p class="text-sm font-bold text-gray-800">Tidak ada pesanan ditemukan</p>
+                        <p class="text-xs text-gray-400 mt-1">Coba ubah kata kunci pencarian atau filter status.</p>
+                    </div>
+                `;
+            } else {
+                filtered.forEach(order => {
+                    const menu = menuItems.find(m => m.id == order.menuId) || { name: 'Menu Dihapus', price: 0 };
+                    const totalPrice = menu.price * order.qty;
+
+                    let statusBadge = '';
+                    if (order.status === 'Pending') statusBadge = 'bg-amber-100 text-amber-800 border-amber-200';
+                    else if (order.status === 'Proses') statusBadge = 'bg-blue-100 text-blue-800 border-blue-200';
+                    else if (order.status === 'Selesai') statusBadge = 'bg-emerald-100 text-emerald-800 border-emerald-200';
+                    else statusBadge = 'bg-red-100 text-red-800 border-red-200';
+
+                    html += `
+                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 space-y-3 relative hover:border-bakery-300 transition">
+                            <div class="flex items-center justify-between border-b border-gray-100 pb-2.5">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-xs font-bold text-bakery-700 bg-bakery-50 px-2.5 py-1 rounded-xl">
+                                        <i class="fa-regular fa-calendar mr-1"></i> ${formatDisplayDate(order.date)} (${order.time})
+                                    </span>
+                                </div>
+                                <select onchange="updateOrderStatus(${order.id}, this.value)" class="text-xs font-bold px-2.5 py-1 rounded-full border ${statusBadge} focus:outline-none cursor-pointer">
+                                    <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="Proses" ${order.status === 'Proses' ? 'selected' : ''}>Proses</option>
+                                    <option value="Selesai" ${order.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+                                    <option value="Batal" ${order.status === 'Batal' ? 'selected' : ''}>Batal</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold text-gray-900 text-sm">${order.customer}</h4>
+                                    <p class="text-xs font-semibold text-gray-700 mt-0.5">${order.qty}x ${menu.name}</p>
+                                    ${order.notes ? `<p class="text-[11px] text-gray-500 italic mt-1"><i class="fa-solid fa-note-sticky mr-1 text-bakery-400"></i> ${order.notes}</p>` : ''}
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs font-extrabold text-bakery-900">${formatIDR(totalPrice)}</p>
+                                    <p class="text-[10px] text-gray-400 mt-0.5">@ ${formatIDR(menu.price)}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-end space-x-2 pt-1 border-t border-gray-50">
+                                <button onclick="editBooking(${order.id})" class="px-3 py-1 bg-gray-100 hover:bg-bakery-100 text-gray-700 hover:text-bakery-700 rounded-xl text-xs font-semibold transition flex items-center space-x-1">
+                                    <i class="fa-solid fa-pen text-[10px]"></i><span>Edit</span>
+                                </button>
+                                <button onclick="deleteBooking(${order.id})" class="px-3 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-semibold transition flex items-center space-x-1">
+                                    <i class="fa-solid fa-trash text-[10px]"></i><span>Hapus</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
             }
 
-            let totalRevenue = 0;
+            html += `
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+        }
+
+        function handleBookingSearch(val) {
+            bookingSearchQuery = val;
+        }
+
+        function filterBookingStatus(st) {
+            bookingStatusFilter = st;
+            renderCurrentTab();
+        }
+
+        function updateOrderStatus(id, newStatus) {
+            const order = bookings.find(b => b.id === id);
+            if (order) {
+                order.status = newStatus;
+                showToast(`Status pesanan diperbarui jadi ${newStatus}`);
+                renderCurrentTab();
+            }
+        }
+
+
+        // --- 3. PROFIT & LOSS TAB (Defaults to Current Month "Bulan Ini" + Privacy Mask) ---
+        let selectedPnlMonth = new Date().toISOString().slice(0, 7); // 'YYYY-MM'
+
+        function renderPnlTab(container) {
+            // Filter bookings for selected month
+            let monthBookings = bookings.filter(b => b.date.startsWith(selectedPnlMonth) && b.status !== 'Batal');
+
+            let grossRevenue = 0;
             let totalHpp = 0;
+            let totalItemsSold = 0;
 
-            filteredOrders.forEach(o => {
-                totalRevenue += (o.price * o.qty);
-                totalHpp += (o.hpp * o.qty);
+            monthBookings.forEach(b => {
+                const menu = menuItems.find(m => m.id == b.menuId);
+                if (menu) {
+                    grossRevenue += menu.price * b.qty;
+                    totalHpp += menu.hpp * b.qty;
+                    totalItemsSold += b.qty;
+                }
             });
 
-            let netProfit = totalRevenue - totalHpp;
+            // Estimated operational expenses (fixed percentage or dummy realistic baker overhead)
+            const operationalExpense = Math.round(grossRevenue * 0.18) + 1500000; // Listrik, gas, sewa, gaji
+            const netProfit = grossRevenue - totalHpp - operationalExpense;
+            const profitMargin = grossRevenue > 0 ? ((netProfit / grossRevenue) * 100).toFixed(1) : 0;
 
-            document.getElementById('fin-total-revenue').innerText = formatIDR(totalRevenue);
-            document.getElementById('fin-total-hpp').innerText = formatIDR(totalHpp);
-            document.getElementById('fin-net-profit').innerText = formatIDR(netProfit);
+            let html = `
+                <div class="p-4 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-extrabold text-gray-900 tracking-tight">Laba & Rugi (P&L)</h2>
+                            <p class="text-xs text-gray-500">Otomatis kalkulasi HPP dan margin</p>
+                        </div>
+                        <input type="month" id="pnl-month-select" value="${selectedPnlMonth}" onchange="changePnlMonth(this.value)" class="bg-white border border-gray-200 text-xs font-bold text-gray-800 px-3 py-2 rounded-xl focus:outline-none focus:border-bakery-500 shadow-sm">
+                    </div>
 
-            const ledgerContainer = document.getElementById('financial-ledger-list');
-            if (filteredOrders.length === 0) {
-                ledgerContainer.innerHTML = `<p class="text-xs text-bakery-800 font-bold text-center py-3">Tidak ada transaksi pada periode ini.</p>`;
-                return;
+                    <!-- Main Summary Card -->
+                    <div class="bg-gradient-to-br from-gray-900 via-bakery-950 to-bakery-900 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden">
+                        <div class="absolute right-0 top-0 w-40 h-40 bg-bakery-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-xs font-semibold text-bakery-200 tracking-wide uppercase">Net Profit (Laba Bersih)</span>
+                            <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-0.5 rounded-full text-[11px] font-bold">
+                                Margin ${profitMargin}%
+                            </span>
+                        </div>
+                        <h3 class="text-3xl font-extrabold tracking-tight mb-2">${formatIDR(netProfit)}</h3>
+                        <p class="text-xs text-gray-300">Periode: <span class="font-bold text-white">${formatDisplayMonth(selectedPnlMonth)}</span></p>
+
+                        <div class="grid grid-cols-2 gap-3 mt-6 pt-5 border-t border-white/10">
+                            <div>
+                                <p class="text-[11px] text-gray-400">Total Omset Kotor</p>
+                                <p class="text-sm font-bold text-emerald-400 mt-0.5">${formatIDR(grossRevenue)}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[11px] text-gray-400">Total Produk Terjual</p>
+                                <p class="text-sm font-bold text-bakery-200 mt-0.5">${totalItemsSold} pcs</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Breakdown Cards -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+                            <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-2 font-bold text-xs">
+                                <i class="fa-solid fa-boxes-stacked"></i>
+                            </div>
+                            <p class="text-[11px] text-gray-500 font-medium">Total HPP (Modal Bahan)</p>
+                            <p class="text-sm font-extrabold text-gray-900 mt-1">${formatIDR(totalHpp)}</p>
+                            <p class="text-[10px] text-gray-400 mt-0.5">${Math.round((totalHpp/(grossRevenue||1))*100)}% dari omset</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+                            <div class="w-8 h-8 rounded-xl bg-orange-50 text-bakery-600 flex items-center justify-center mb-2 font-bold text-xs">
+                                <i class="fa-solid fa-receipt"></i>
+                            </div>
+                            <p class="text-[11px] text-gray-500 font-medium">Biaya Operasional Est.</p>
+                            <p class="text-sm font-extrabold text-gray-900 mt-1">${formatIDR(operationalExpense)}</p>
+                            <p class="text-[10px] text-gray-400 mt-0.5">Listrik, Gas, Gaji</p>
+                        </div>
+                    </div>
+
+                    <!-- Menu Performance List in Month -->
+                    <div class="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 space-y-3">
+                        <h3 class="text-xs font-bold text-gray-800 uppercase tracking-wide">
+                            <i class="fa-solid fa-chart-line text-bakery-500 mr-1.5"></i> Performa Menu Bulan Ini
+                        </h3>
+            `;
+
+            let menuStats = {};
+            menuItems.forEach(m => {
+                menuStats[m.id] = { name: m.name, qty: 0, revenue: 0, hpp: m.hpp * 0 };
+            });
+
+            monthBookings.forEach(b => {
+                if (menuStats[b.menuId]) {
+                    const menu = menuItems.find(m => m.id == b.menuId);
+                    menuStats[b.menuId].qty += b.qty;
+                    menuStats[b.menuId].revenue += menu.price * b.qty;
+                }
+            });
+
+            let sortedMenus = Object.values(menuStats).sort((a,b) => b.revenue - a.revenue);
+
+            sortedMenus.forEach(item => {
+                if (item.qty > 0) {
+                    html += `
+                        <div class="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
+                            <div>
+                                <p class="text-xs font-bold text-gray-900">${item.name}</p>
+                                <p class="text-[10px] text-gray-400">${item.qty} terjual</p>
+                            </div>
+                            <span class="text-xs font-extrabold text-bakery-700">${formatIDR(item.revenue)}</span>
+                        </div>
+                    `;
+                }
+            });
+
+            if (monthBookings.length === 0) {
+                html += `<p class="text-xs text-gray-400 text-center py-4">Belum ada transaksi di bulan ini.</p>`;
             }
 
-            let html = '';
-            filteredOrders.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(ord => {
-                let rev = ord.price * ord.qty;
-                let hpp = ord.hpp * ord.qty;
-                let profit = rev - hpp;
+            html += `
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+        }
+
+        function changePnlMonth(val) {
+            selectedPnlMonth = val;
+            renderCurrentTab();
+        }
+
+        function formatDisplayMonth(yearMonthStr) {
+            const [y, m] = yearMonthStr.split('-');
+            const d = new Date(y, m - 1, 1);
+            return d.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+        }
+
+
+        // --- 4. SETTING TAB (Full CRUD Menu Management with HPP & Selling Price) ---
+        let settingMenuCategoryFilter = 'ALL';
+
+        function renderSettingTab(container) {
+            let html = `
+                <div class="p-4 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-extrabold text-gray-900 tracking-tight">Manajemen Menu & Harga</h2>
+                            <p class="text-xs text-gray-500">Atur HPP, harga jual, dan produk roti</p>
+                        </div>
+                        <button onclick="openMenuModal()" class="px-3.5 py-2 bg-bakery-600 text-white rounded-xl text-xs font-bold shadow hover:bg-bakery-700 transition flex items-center space-x-1.5">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Tambah Menu</span>
+                        </button>
+                    </div>
+
+                    <!-- Category Pills -->
+                    <div class="flex space-x-1.5 overflow-x-auto hide-scrollbar pb-1">
+            `;
+
+            const categories = ['ALL', 'Roti Artisanal', 'Pastry & Croissant', 'Cake & Tart', 'Cookies & Snack', 'Minuman'];
+            categories.forEach(cat => {
+                const isActive = settingMenuCategoryFilter === cat;
+                html += `
+                    <button onclick="filterMenuCategory('${cat}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition border ${isActive ? 'bg-bakery-600 text-white border-bakery-600 shadow' : 'bg-white text-gray-600 border-gray-200 hover:bg-bakery-50'}">
+                        ${cat === 'ALL' ? 'Semua Kategori' : cat}
+                    </button>
+                `;
+            });
+
+            html += `
+                    </div>
+
+                    <!-- Menu Items List -->
+                    <div class="space-y-3">
+            `;
+
+            let filteredMenus = menuItems.filter(m => settingMenuCategoryFilter === 'ALL' || m.category === settingMenuCategoryFilter);
+
+            filteredMenus.forEach(menu => {
+                const profitPerItem = menu.price - menu.hpp;
+                const marginPerItem = menu.price > 0 ? Math.round((profitPerItem / menu.price) * 100) : 0;
 
                 html += `
-                    <div class="bg-bakery-50 p-3 rounded-xl border border-bakery-200 text-xs flex justify-between items-center shadow-sm safe-text-wrap gap-2">
-                        <div class="min-w-0 flex-1">
-                            <div class="flex items-center space-x-1.5 flex-wrap">
-                                <span class="font-extrabold text-bakery-950 text-xs">${ord.customer}</span>
-                                <span class="text-[10px] text-bakery-800 font-bold">(${ord.date})</span>
+                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 space-y-2.5 relative hover:border-bakery-300 transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-[10px] font-bold text-bakery-700 bg-bakery-50 px-2 py-0.5 rounded-lg">${menu.category}</span>
+                                <h4 class="font-bold text-gray-900 text-sm mt-1">${menu.name}</h4>
+                                <p class="text-[11px] text-gray-500 mt-0.5">${menu.desc || 'Tanpa deskripsi'}</p>
                             </div>
-                            <p class="text-bakery-900 text-xs font-bold mt-0.5 truncate">${ord.product} (${ord.qty}x)</p>
-                            <p class="text-[10px] text-bakery-800 font-bold mt-0.5">Omzet: ${formatIDR(rev)} | HPP: ${formatIDR(hpp)}</p>
+                            <div class="flex space-x-1">
+                                <button onclick="editMenu(${menu.id})" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-bakery-100 text-gray-600 hover:text-bakery-700 flex items-center justify-center text-xs transition" title="Edit Menu">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button onclick="deleteMenu(${menu.id})" class="w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center text-xs transition" title="Hapus Menu">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="text-right shrink-0">
-                            <span class="text-[10px] text-bakery-800 font-bold block">Profit</span>
-                            <span class="font-extrabold text-emerald-800 text-xs">${formatIDR(profit)}</span>
+
+                        <div class="grid grid-cols-3 gap-2 bg-gray-50 p-2.5 rounded-xl border border-gray-100 text-center">
+                            <div>
+                                <p class="text-[10px] text-gray-400 font-medium">HPP (Modal)</p>
+                                <p class="text-xs font-bold text-gray-700">${formatIDR(menu.hpp)}</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-gray-400 font-medium">Harga Jual</p>
+                                <p class="text-xs font-extrabold text-bakery-800">${formatIDR(menu.price)}</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-gray-400 font-medium">Profit / Margin</p>
+                                <p class="text-xs font-bold text-emerald-600">+${formatIDR(profitPerItem)} (${marginPerItem}%)</p>
+                            </div>
                         </div>
                     </div>
                 `;
             });
-            ledgerContainer.innerHTML = html;
+
+            html += `
+                    </div>
+
+                    <!-- Store Info / Settings Card -->
+                    <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 space-y-3 mt-6">
+                        <h3 class="text-xs font-bold text-gray-800 uppercase tracking-wide">
+                            <i class="fa-solid fa-store text-bakery-500 mr-1.5"></i> Informasi Toko & Data
+                        </h3>
+                        <div class="space-y-2 text-xs text-gray-600">
+                            <div class="flex justify-between py-1 border-b border-gray-50">
+                                <span class="font-medium text-gray-500">Nama Toko</span>
+                                <span class="font-bold text-gray-900">Daily Bread Bakery Studio</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-gray-50">
+                                <span class="font-medium text-gray-500">Mata Uang</span>
+                                <span class="font-bold text-gray-900">IDR (Rupiah)</span>
+                            </div>
+                            <div class="flex justify-between py-1">
+                                <span class="font-medium text-gray-500">Status Sistem</span>
+                                <span class="font-bold text-emerald-600 flex items-center"><i class="fa-solid fa-circle text-[8px] mr-1.5 text-emerald-500 animate-pulse"></i> Aktif & Tersimpan</span>
+                            </div>
+                        </div>
+                        <div class="pt-2">
+                            <button onclick="resetDefaultData()" class="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-bold text-xs transition">
+                                Reset Data Dummy Awal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
         }
 
-        function openOrderModal(editId = null) {
-            const modal = document.getElementById('order-modal');
-            const form = document.getElementById('order-form');
-            form.reset();
-            document.getElementById('order-id').value = '';
-            document.getElementById('order-modal-title').innerText = 'Buat Pesanan Baru';
-            document.getElementById('order-date').value = new Date().toISOString().split('T')[0];
+        function filterMenuCategory(cat) {
+            settingMenuCategoryFilter = cat;
+            renderCurrentTab();
+        }
 
-            const select = document.getElementById('order-product-select');
-            select.innerHTML = '';
+
+        // --- Modal Handlers for Bookings ---
+        function openQuickBookingModal() {
+            document.getElementById('modal-title').innerText = 'Buat Booking Baru';
+            document.getElementById('edit-booking-id').value = '';
+            document.getElementById('order-customer').value = '';
+            document.getElementById('order-date').value = selectedDateFilter;
+            document.getElementById('order-time').value = '10:00';
+            document.getElementById('order-qty').value = 1;
+            document.getElementById('order-status').value = 'Pending';
+            document.getElementById('order-notes').value = '';
+            renderModalMenuItems(menuItems[0]?.id || 0);
+            document.getElementById('booking-modal').classList.remove('hidden');
+        }
+
+        function openQuickBookingModalWithDate(dateStr) {
+            openQuickBookingModal();
+            document.getElementById('order-date').value = dateStr;
+        }
+
+        function closeBookingModal() {
+            document.getElementById('booking-modal').classList.add('hidden');
+        }
+
+        function renderModalMenuItems(selectedId) {
+            const container = document.getElementById('modal-menu-items');
+            let html = '';
             menuItems.forEach(m => {
-                let opt = document.createElement('option');
-                opt.value = m.name;
-                opt.setAttribute('data-price', m.price);
-                opt.setAttribute('data-hpp', m.hpp);
-                opt.innerText = `${m.name} (${formatIDR(m.price)})`;
-                select.appendChild(opt);
+                const isSelected = Number(selectedId) === Number(m.id);
+                html += `
+                    <label class="flex items-center justify-between p-2 rounded-xl cursor-pointer transition border ${isSelected ? 'bg-bakery-50 border-bakery-300' : 'bg-white border-gray-100 hover:bg-gray-50'}">
+                        <div class="flex items-center space-x-2.5">
+                            <input type="radio" name="modal_menu_radio" value="${m.id}" ${isSelected ? 'checked' : ''} onchange="calculateModalTotal()" class="text-bakery-600 focus:ring-bakery-500">
+                            <div>
+                                <p class="text-xs font-bold text-gray-900">${m.name}</p>
+                                <p class="text-[10px] text-gray-400">${m.category}</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-extrabold text-bakery-800">${formatIDR(m.price)}</span>
+                    </label>
+                `;
             });
+            container.innerHTML = html;
+            calculateModalTotal();
+        }
+
+        function calculateModalTotal() {
+            const radios = document.querySelectorAll('input[name="modal_menu_radio"]');
+            let selectedMenuId = menuItems[0]?.id;
+            radios.forEach(r => { if (r.checked) selectedMenuId = r.value; });
+
+            const qty = parseInt(document.getElementById('order-qty').value) || 1;
+            const menu = menuItems.find(m => m.id == selectedMenuId);
+
+            if (menu) {
+                document.getElementById('modal-total-preview').innerText = formatIDR(menu.price * qty);
+                document.getElementById('modal-hpp-preview').innerText = formatIDR(menu.hpp * qty);
+            }
+        }
+
+        function handleBookingSubmit(e) {
+            e.preventDefault();
+            const editId = document.getElementById('edit-booking-id').value;
+            const customer = document.getElementById('order-customer').value;
+            const date = document.getElementById('order-date').value;
+            const time = document.getElementById('order-time').value;
+            const qty = parseInt(document.getElementById('order-qty').value);
+            const status = document.getElementById('order-status').value;
+            const notes = document.getElementById('order-notes').value;
+
+            const radios = document.querySelectorAll('input[name="modal_menu_radio"]');
+            let menuId = menuItems[0]?.id;
+            radios.forEach(r => { if (r.checked) menuId = parseInt(r.value); });
 
             if (editId) {
-                const ord = orders.find(o => o.id === editId);
-                if (ord) {
-                    document.getElementById('order-modal-title').innerText = 'Edit Pesanan';
-                    document.getElementById('order-id').value = ord.id;
-                    document.getElementById('order-customer').value = ord.customer;
-                    document.getElementById('order-phone').value = ord.phone;
-                    document.getElementById('order-date').value = ord.date;
-                    document.getElementById('order-product-select').value = ord.product;
-                    document.getElementById('order-qty').value = ord.qty;
-                    document.getElementById('order-price').value = ord.price;
-                    document.getElementById('order-status').value = ord.status;
-                    document.getElementById('order-payment').value = ord.payment;
-                    document.getElementById('order-notes').value = ord.notes || '';
+                const order = bookings.find(b => b.id == editId);
+                if (order) {
+                    order.customer = customer;
+                    order.date = date;
+                    order.time = time;
+                    order.menuId = menuId;
+                    order.qty = qty;
+                    order.status = status;
+                    order.notes = notes;
+                    showToast('Booking berhasil diperbarui!');
                 }
             } else {
-                onProductSelectChange();
+                const newOrder = {
+                    id: Date.now(),
+                    customer,
+                    date,
+                    time,
+                    menuId,
+                    qty,
+                    status,
+                    notes
+                };
+                bookings.push(newOrder);
+                showToast('Booking baru berhasil dibuat!');
             }
 
-            calculateOrderTotal();
-            modal.classList.remove('hidden');
+            closeBookingModal();
+            renderCurrentTab();
         }
 
-        function closeOrderModal() {
-            document.getElementById('order-modal').classList.add('hidden');
+        function editBooking(id) {
+            const order = bookings.find(b => b.id === id);
+            if (!order) return;
+
+            document.getElementById('modal-title').innerText = 'Edit Pesanan Booking';
+            document.getElementById('edit-booking-id').value = order.id;
+            document.getElementById('order-customer').value = order.customer;
+            document.getElementById('order-date').value = order.date;
+            document.getElementById('order-time').value = order.time;
+            document.getElementById('order-qty').value = order.qty;
+            document.getElementById('order-status').value = order.status;
+            document.getElementById('order-notes').value = order.notes || '';
+            renderModalMenuItems(order.menuId);
+            document.getElementById('booking-modal').classList.remove('hidden');
         }
 
-        function onProductSelectChange() {
-            const select = document.getElementById('order-product-select');
-            const selectedOpt = select.options[select.selectedIndex];
-            if (selectedOpt) {
-                const price = selectedOpt.getAttribute('data-price');
-                document.getElementById('order-price').value = price;
-                calculateOrderTotal();
-            }
-        }
-
-        function calculateOrderTotal() {
-            const qty = parseFloat(document.getElementById('order-qty').value) || 0;
-            const price = parseFloat(document.getElementById('order-price').value) || 0;
-            const select = document.getElementById('order-product-select');
-            const selectedOpt = select.options[select.selectedIndex];
-            let hpp = 0;
-            if (selectedOpt) {
-                hpp = parseFloat(selectedOpt.getAttribute('data-hpp')) || 0;
-            }
-
-            let totalRev = qty * price;
-            let totalHpp = qty * hpp;
-
-            document.getElementById('order-total-preview').innerText = formatIDR(totalRev);
-            document.getElementById('order-hpp-preview').innerText = formatIDR(totalHpp);
-        }
-
-        function saveOrder(event) {
-            event.preventDefault();
-            const id = document.getElementById('order-id').value;
-            const select = document.getElementById('order-product-select');
-            const selectedOpt = select.options[select.selectedIndex];
-            let hpp = selectedOpt ? parseFloat(selectedOpt.getAttribute('data-hpp')) || 0 : 0;
-
-            const orderData = {
-                id: id || 'ord-' + Date.now(),
-                customer: document.getElementById('order-customer').value,
-                phone: document.getElementById('order-phone').value,
-                date: document.getElementById('order-date').value,
-                product: select.value,
-                qty: parseInt(document.getElementById('order-qty').value),
-                price: parseFloat(document.getElementById('order-price').value),
-                hpp: hpp,
-                status: document.getElementById('order-status').value,
-                payment: document.getElementById('order-payment').value,
-                notes: document.getElementById('order-notes').value
-            };
-
-            if (id) {
-                const index = orders.findIndex(o => o.id === id);
-                if (index !== -1) orders[index] = orderData;
-                showToast('Pesanan berhasil diperbarui');
-            } else {
-                orders.push(orderData);
-                showToast('Pesanan baru berhasil dibuat');
-            }
-
-            saveData();
-            closeOrderModal();
-        }
-
-        function editOrder(id) {
-            openOrderModal(id);
-        }
-
-        function deleteOrder(id) {
+        function deleteBooking(id) {
             if (confirm('Hapus pesanan ini dari daftar?')) {
-                orders = orders.filter(o => o.id !== id);
-                saveData();
+                bookings = bookings.filter(b => b.id !== id);
                 showToast('Pesanan berhasil dihapus');
+                renderCurrentTab();
             }
         }
 
-        function exportDataJSON() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ menuItems, orders }, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `daily_bread_backup_${new Date().toISOString().split('T')[0]}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-            showToast('Backup data berhasil diunduh');
+
+        // --- Modal Handlers for Menu CRUD ---
+        function openMenuModal() {
+            document.getElementById('menu-modal-title').innerText = 'Tambah Menu Roti Baru';
+            document.getElementById('edit-menu-id').value = '';
+            document.getElementById('menu-name').value = '';
+            document.getElementById('menu-category').value = 'Roti Artisanal';
+            document.getElementById('menu-hpp').value = '';
+            document.getElementById('menu-price').value = '';
+            document.getElementById('menu-desc').value = '';
+            document.getElementById('menu-modal').classList.remove('hidden');
         }
 
-        function resetAllData() {
-            if (confirm('Reset seluruh data pesanan ke default?')) {
-                localStorage.clear();
-                menuItems = DEFAULT_MENU;
-                orders = DEFAULT_ORDERS;
-                saveData();
-                showToast('Aplikasi berhasil direset');
+        function closeMenuModal() {
+            document.getElementById('menu-modal').classList.add('hidden');
+        }
+
+        function handleMenuSubmit(e) {
+            e.preventDefault();
+            const editId = document.getElementById('edit-menu-id').value;
+            const name = document.getElementById('menu-name').value;
+            const category = document.getElementById('menu-category').value;
+            const hpp = parseFloat(document.getElementById('menu-hpp').value);
+            const price = parseFloat(document.getElementById('menu-price').value);
+            const desc = document.getElementById('menu-desc').value;
+
+            if (editId) {
+                const menu = menuItems.find(m => m.id == editId);
+                if (menu) {
+                    menu.name = name;
+                    menu.category = category;
+                    menu.hpp = hpp;
+                    menu.price = price;
+                    menu.desc = desc;
+                    showToast('Menu berhasil diperbarui!');
+                }
+            } else {
+                const newMenu = {
+                    id: Date.now(),
+                    name,
+                    category,
+                    hpp,
+                    price,
+                    desc
+                };
+                menuItems.push(newMenu);
+                showToast('Menu baru berhasil ditambahkan!');
+            }
+
+            closeMenuModal();
+            renderCurrentTab();
+        }
+
+        function editMenu(id) {
+            const menu = menuItems.find(m => m.id === id);
+            if (!menu) return;
+
+            document.getElementById('menu-modal-title').innerText = 'Edit Menu Roti';
+            document.getElementById('edit-menu-id').value = menu.id;
+            document.getElementById('menu-name').value = menu.name;
+            document.getElementById('menu-category').value = menu.category;
+            document.getElementById('menu-hpp').value = menu.hpp;
+            document.getElementById('menu-price').value = menu.price;
+            document.getElementById('menu-desc').value = menu.desc || '';
+            document.getElementById('menu-modal').classList.remove('hidden');
+        }
+
+        function deleteMenu(id) {
+            if (confirm('Hapus menu ini? Menu yang terhubung dengan pesanan lama akan tetap aman.')) {
+                menuItems = menuItems.filter(m => m.id !== id);
+                showToast('Menu berhasil dihapus');
+                renderCurrentTab();
             }
         }
 
-        function refreshAllViews() {
-            renderSevenDayOrders();
-            renderBookingsList();
-            renderFinancialDashboard();
+        function resetDefaultData() {
+            if (confirm('Reset seluruh data ke kondisi awal?')) {
+                location.reload();
+            }
         }
 
-        refreshAllViews();
+        // Initial render on window load
+        window.onload = function() {
+            renderCurrentTab();
+        };
     </script>
 </body>
 </html>
