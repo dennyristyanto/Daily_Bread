@@ -70,6 +70,51 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        /* --- Invoice preview (A4 @ 96dpi = 794 x 1123 px, di-scale agar muat layar) --- */
+        .inv-scale-wrap { position: relative; margin: 0 auto; overflow: hidden; }
+        .inv-paper {
+            position: absolute; top: 0; left: 0;
+            width: 794px; min-height: 1123px;
+            transform-origin: top left;
+            background: #fff; color: #1f2937;
+            padding: 68px 68px 60px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+            font-family: Helvetica, Arial, sans-serif;
+            display: flex; flex-direction: column;
+        }
+        .inv-paper::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 19px; background: #ea580c; }
+        .inv-paper * { box-sizing: border-box; }
+        .inv-head { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 22px; border-bottom: 1px solid #e5e7eb; }
+        .inv-brand { display: flex; align-items: center; gap: 14px; }
+        .inv-logo { width: 60px; height: 60px; border-radius: 14px; background: #ea580c; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 30px; }
+        .inv-brand-name { font-size: 26px; font-weight: 700; color: #111827; line-height: 1.1; }
+        .inv-brand-sub { font-size: 14px; color: #6b7280; margin-top: 4px; }
+        .inv-title { text-align: right; }
+        .inv-title h2 { font-size: 38px; font-weight: 800; letter-spacing: 3px; color: #c2410c; margin: 0; line-height: 1; }
+        .inv-title p { font-size: 14px; color: #4b5563; margin-top: 8px; }
+        .inv-info { display: flex; justify-content: space-between; gap: 32px; margin-top: 30px; }
+        .inv-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: #6b7280; text-transform: uppercase; }
+        .inv-customer { font-size: 20px; font-weight: 700; color: #111827; margin-top: 8px; word-break: break-word; max-width: 320px; }
+        .inv-meta { width: 292px; font-size: 13.5px; }
+        .inv-meta-row { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; }
+        .inv-meta-row span:first-child { color: #6b7280; }
+        .inv-meta-row span:last-child { font-weight: 700; color: #111827; text-align: right; }
+        .inv-status { display: inline-block; border: 1.5px solid #374151; border-radius: 999px; padding: 1px 10px; font-size: 12px; }
+        .inv-table { width: 100%; border-collapse: collapse; margin-top: 34px; font-size: 13.5px; }
+        .inv-table th { background: #c2410c; color: #fff; font-size: 12px; font-weight: 700; text-align: left; padding: 10px 12px; }
+        .inv-table td { padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+        .inv-table .r { text-align: right; } .inv-table .c { text-align: center; }
+        .inv-item-name { font-weight: 700; color: #111827; word-break: break-word; }
+        .inv-item-sub { font-size: 11.5px; color: #6b7280; margin-top: 3px; word-break: break-word; }
+        .inv-muted { color: #9ca3af; font-style: italic; }
+        .inv-totals { margin-left: auto; width: 292px; margin-top: 18px; font-size: 13.5px; }
+        .inv-grand { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding: 12px 14px; border: 1.5px solid #ea580c; border-radius: 8px; background: #fff7ed; }
+        .inv-grand span:first-child { font-weight: 700; font-size: 14px; }
+        .inv-grand span:last-child { font-weight: 800; font-size: 20px; color: #9a3412; }
+        .inv-notes { margin-top: 30px; }
+        .inv-notes-box { margin-top: 8px; padding: 12px 14px; border: 1px solid #e5e7eb; border-left: 4px solid #ea580c; border-radius: 6px; font-size: 13.5px; white-space: pre-wrap; word-break: break-word; }
+        .inv-foot { margin-top: auto; padding-top: 22px; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; font-size: 11.5px; color: #6b7280; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-0 sm:p-4">
@@ -87,14 +132,6 @@
                     <h1 class="font-bold text-lg tracking-tight leading-tight">Daily Bread</h1>
                     <p class="text-xs text-bakery-100 opacity-90 font-medium">Bakery & Pastry Studio</p>
                 </div>
-            </div>
-            <div class="flex items-center space-x-2">
-                <button onclick="togglePrivacy()" id="privacy-btn" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-bakery-100 transition" title="Sembunyikan/Tampilkan Nominal">
-                    <i class="fa-solid fa-eye text-sm" id="privacy-icon"></i>
-                </button>
-                <button onclick="openQuickBookingModal()" class="w-9 h-9 rounded-full bg-white text-bakery-700 hover:bg-bakery-50 flex items-center justify-center shadow font-bold transition">
-                    <i class="fa-solid fa-plus text-sm"></i>
-                </button>
             </div>
         </header>
 
@@ -253,6 +290,40 @@
             </div>
         </div>
 
+        <!-- Invoice Preview Modal -->
+        <div id="invoice-modal" class="absolute inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden" role="dialog" aria-modal="true" aria-labelledby="invoice-modal-title">
+            <div class="bg-white w-full sm:max-w-md rounded-t-[32px] sm:rounded-[32px] h-[92%] sm:h-full flex flex-col shadow-2xl overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-bakery-50/50 shrink-0">
+                    <div class="min-w-0">
+                        <h3 class="font-bold text-gray-900 text-base" id="invoice-modal-title">Preview Invoice</h3>
+                        <p class="text-[11px] text-gray-500 font-medium truncate" id="invoice-modal-subtitle"></p>
+                    </div>
+                    <button onclick="closeInvoicePreview()" class="w-8 h-8 shrink-0 rounded-full bg-gray-200/70 hover:bg-gray-300 flex items-center justify-center text-gray-600 transition" aria-label="Tutup"><i class="fa-solid fa-xmark text-sm"></i></button>
+                </div>
+                <div id="invoice-body" class="flex-1 overflow-y-auto bg-gray-100 p-3 space-y-3">
+                    <div id="invoice-alert" class="hidden bg-red-50 border border-red-200 text-red-700 rounded-2xl px-4 py-3 text-xs font-medium flex items-start space-x-2.5" role="alert">
+                        <i id="invoice-alert-icon" class="fa-solid fa-circle-exclamation text-red-500 text-sm mt-0.5"></i>
+                        <span id="invoice-alert-msg"></span>
+                    </div>
+                    <div id="invoice-loading" class="hidden flex flex-col items-center justify-center py-20 text-center" aria-live="polite">
+                        <div class="w-10 h-10 border-4 border-bakery-100 border-t-bakery-600 rounded-full animate-spin"></div>
+                        <p class="text-xs font-bold text-gray-700 mt-4" id="invoice-loading-msg">Menyiapkan invoice...</p>
+                    </div>
+                    <div id="invoice-scale-wrap" class="inv-scale-wrap hidden">
+                        <div id="invoice-paper" class="inv-paper"></div>
+                    </div>
+                </div>
+                <div class="p-4 border-t border-gray-100 grid grid-cols-2 gap-3 shrink-0 bg-white">
+                    <button onclick="closeInvoicePreview()" class="py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl font-bold text-sm transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-arrow-left text-xs"></i><span>Kembali</span>
+                    </button>
+                    <button id="invoice-download-btn" onclick="downloadCurrentInvoice()" disabled class="py-3 bg-gradient-to-r from-bakery-600 to-bakery-700 hover:from-bakery-700 hover:to-bakery-800 text-white rounded-2xl font-bold shadow-lg shadow-bakery-600/30 transition text-sm flex items-center justify-center space-x-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                        <i class="fa-solid fa-file-arrow-down text-xs" id="invoice-download-icon"></i><span id="invoice-download-label">Download PDF</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -290,6 +361,37 @@
             { id: 106, customer: 'Hotel Merdeka', date: formatDateStr(new Date(todayDateObj.getTime() - 86400000)), time: '07:00', menuId: 1, qty: 15, status: 'Selesai', notes: 'Breakfast supply' },
         ];
 
+        // --- Status pesanan (satu sumber kebenaran) ---
+        const ORDER_STATUS = Object.freeze({
+            PENDING: 'Pending',
+            PROSES: 'Proses',
+            SELESAI: 'Selesai',
+            BATAL: 'Batal'
+        });
+        // Variasi huruf / istilah dari data dipetakan ke status baku
+        const ORDER_STATUS_ALIASES = {
+            'pending': ORDER_STATUS.PENDING, 'menunggu': ORDER_STATUS.PENDING,
+            'proses': ORDER_STATUS.PROSES, 'diproses': ORDER_STATUS.PROSES, 'processing': ORDER_STATUS.PROSES, 'in progress': ORDER_STATUS.PROSES,
+            'selesai': ORDER_STATUS.SELESAI, 'done': ORDER_STATUS.SELESAI, 'complete': ORDER_STATUS.SELESAI, 'completed': ORDER_STATUS.SELESAI,
+            'batal': ORDER_STATUS.BATAL, 'dibatalkan': ORDER_STATUS.BATAL, 'cancel': ORDER_STATUS.BATAL, 'canceled': ORDER_STATUS.BATAL, 'cancelled': ORDER_STATUS.BATAL
+        };
+        function normalizeStatus(value) {
+            const key = String(value ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
+            return ORDER_STATUS_ALIASES[key] || null; // null = status tidak dikenal
+        }
+        function getStatusLabel(value) {
+            return normalizeStatus(value) || String(value ?? '').trim() || '-';
+        }
+        // Pesanan aktif tampil di Home & daftar utama Booking.
+        // Pesanan Selesai/Batal tetap tersimpan di data dan tampil di Riwayat Pesanan (arsip).
+        const ACTIVE_STATUSES = [ORDER_STATUS.PENDING, ORDER_STATUS.PROSES];
+        function isActiveOrder(order) {
+            return ACTIVE_STATUSES.includes(normalizeStatus(order.status));
+        }
+        function isCancelledOrder(order) {
+            return normalizeStatus(order.status) === ORDER_STATUS.BATAL;
+        }
+
         // Format Currency Helper
         function formatIDR(amount) {
             if (privacyMode) return 'Rp ••••••';
@@ -325,6 +427,7 @@
         // Tab Switcher
         function switchTab(tabName) {
             currentTab = tabName;
+            if (tabName === 'booking') bookingView = 'active';
             ['home', 'booking', 'pnl', 'setting'].forEach(t => {
                 const btn = document.getElementById(`nav-${t}`);
                 if (t === tabName) {
@@ -350,9 +453,9 @@
 
         // --- 1. HOME TAB (7-Day Chronological Schedule & Quick Booking) ---
         function renderHomeTab(container) {
-            // Generate 7 days (Past 1 day, Today, Next 5 days)
+            // Generate 7 days starting from today (Today + next 6 days)
             let daysList = [];
-            for (let i = -1; i <= 5; i++) {
+            for (let i = 0; i <= 6; i++) {
                 let d = new Date();
                 d.setDate(d.getDate() + i);
                 daysList.push({
@@ -368,11 +471,13 @@
             let todayRevenue = 0;
             let todayOrdersCount = 0;
             bookings.forEach(b => {
-                if (b.date === todayStr && b.status !== 'Batal') {
+                // Potensi omset: aturan bisnis yang sama dengan P&L (semua pesanan kecuali Batal)
+                if (b.date === todayStr && !isCancelledOrder(b)) {
                     const menu = menuItems.find(m => m.id == b.menuId);
                     if (menu) todayRevenue += menu.price * b.qty;
-                    todayOrdersCount++;
                 }
+                // Jumlah pesanan: hanya pesanan aktif yang tampil di jadwal
+                if (b.date === todayStr && isActiveOrder(b)) todayOrdersCount++;
             });
 
             let html = `
@@ -411,7 +516,7 @@
             `;
 
             daysList.forEach(day => {
-                const dayOrders = bookings.filter(b => b.date === day.dateStr && b.status !== 'Batal');
+                const dayOrders = bookings.filter(b => b.date === day.dateStr && isActiveOrder(b));
                 const isSelected = (day.dateStr === selectedDateFilter);
                 
                 html += `
@@ -440,7 +545,7 @@
                         </div>
             `;
 
-            const filteredBookings = bookings.filter(b => b.date === selectedDateFilter).sort((a,b) => a.time.localeCompare(b.time));
+            const filteredBookings = bookings.filter(b => b.date === selectedDateFilter && isActiveOrder(b)).sort((a,b) => a.time.localeCompare(b.time));
 
             if (filteredBookings.length === 0) {
                 html += `
@@ -448,8 +553,8 @@
                         <div class="w-12 h-12 bg-bakery-50 rounded-full flex items-center justify-center mx-auto mb-3 text-bakery-500">
                             <i class="fa-solid fa-mug-hot text-xl"></i>
                         </div>
-                        <p class="text-sm font-bold text-gray-800">Tidak ada pesanan</p>
-                        <p class="text-xs text-gray-400 mt-1">Belum ada booking roti untuk tanggal ini.</p>
+                        <p class="text-sm font-bold text-gray-800">Tidak ada pesanan aktif</p>
+                        <p class="text-xs text-gray-400 mt-1">Belum ada pesanan aktif untuk tanggal ini. Pesanan selesai dapat dilihat di Riwayat Pesanan.</p>
                         <button onclick="openQuickBookingModalWithDate('${selectedDateFilter}')" class="mt-4 px-4 py-2 bg-bakery-600 text-white rounded-xl text-xs font-bold shadow hover:bg-bakery-700 transition">
                             + Tambah Pesanan Tanggal Ini
                         </button>
@@ -460,21 +565,18 @@
                     const menu = menuItems.find(m => m.id == order.menuId) || { name: 'Menu Dihapus', price: 0 };
                     const totalPrice = menu.price * order.qty;
                     
-                    let statusBadge = '';
-                    if (order.status === 'Pending') statusBadge = 'bg-amber-100 text-amber-800 border-amber-200';
-                    else if (order.status === 'Proses') statusBadge = 'bg-blue-100 text-blue-800 border-blue-200';
-                    else if (order.status === 'Selesai') statusBadge = 'bg-emerald-100 text-emerald-800 border-emerald-200';
-                    else statusBadge = 'bg-red-100 text-red-800 border-red-200';
+                    const statusBadge = getStatusBadgeClass(order.status);
+                    const statusKey = normalizeStatus(order.status);
 
                     html += `
                         <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-start justify-between relative hover:border-bakery-300 transition">
-                            <div class="absolute left-0 top-3 bottom-3 w-1.5 rounded-r-full ${order.status === 'Selesai' ? 'bg-emerald-500' : order.status === 'Proses' ? 'bg-blue-500' : 'bg-amber-500'}"></div>
+                            <div class="absolute left-0 top-3 bottom-3 w-1.5 rounded-r-full ${statusKey === ORDER_STATUS.SELESAI ? 'bg-emerald-500' : statusKey === ORDER_STATUS.PROSES ? 'bg-blue-500' : 'bg-amber-500'}"></div>
                             <div class="pl-2.5 flex-1">
                                 <div class="flex items-center justify-between mb-1">
                                     <span class="text-xs font-bold text-bakery-700 bg-bakery-50 px-2 py-0.5 rounded-lg">
                                         <i class="fa-regular fa-clock mr-1"></i> ${order.time} WIB
                                     </span>
-                                    <span class="text-[10px] px-2 py-0.5 rounded-full font-bold border ${statusBadge}">${order.status}</span>
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full font-bold border ${statusBadge}">${getStatusLabel(order.status)}</span>
                                 </div>
                                 <h4 class="font-bold text-gray-900 text-sm mt-1">${order.customer}</h4>
                                 <p class="text-xs font-semibold text-gray-700 mt-0.5">${order.qty}x ${menu.name}</p>
@@ -483,6 +585,9 @@
                             <div class="text-right ml-3 shrink-0 flex flex-col items-end justify-between self-stretch">
                                 <span class="text-xs font-extrabold text-bakery-900">${formatIDR(totalPrice)}</span>
                                 <div class="flex space-x-1 mt-auto">
+                                    <button onclick="openInvoicePreview(${order.id})" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-bakery-100 text-gray-600 hover:text-bakery-700 flex items-center justify-center text-xs transition" title="Cetak Invoice" aria-label="Cetak Invoice">
+                                        <i class="fa-solid fa-print"></i>
+                                    </button>
                                     <button onclick="editBooking(${order.id})" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-bakery-100 text-gray-600 hover:text-bakery-700 flex items-center justify-center text-xs transition" title="Edit">
                                         <i class="fa-solid fa-pen"></i>
                                     </button>
@@ -519,76 +624,34 @@
         }
 
 
-        // --- 2. BOOKING TAB (Full Order Management, Search, Filters) ---
+        // --- 2. BOOKING TAB (Daftar pesanan aktif + Riwayat Pesanan) ---
         let bookingSearchQuery = '';
         let bookingStatusFilter = 'ALL';
+        let bookingView = 'active';   // 'active' | 'history'
+        const ACTIVE_STATUS_FILTERS = ['ALL', ...ACTIVE_STATUSES];
 
-        function renderBookingTab(container) {
-            let html = `
-                <div class="p-4 space-y-4">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-lg font-extrabold text-gray-900 tracking-tight">Kelola Booking</h2>
-                        <button onclick="openQuickBookingModal()" class="px-3.5 py-2 bg-bakery-600 text-white rounded-xl text-xs font-bold shadow hover:bg-bakery-700 transition flex items-center space-x-1.5">
-                            <i class="fa-solid fa-plus"></i>
-                            <span>Tambah Booking</span>
-                        </button>
-                    </div>
+        function getStatusBadgeClass(status) {
+            const st = normalizeStatus(status);
+            if (st === ORDER_STATUS.PENDING) return 'bg-amber-100 text-amber-800 border-amber-200';
+            if (st === ORDER_STATUS.PROSES) return 'bg-blue-100 text-blue-800 border-blue-200';
+            if (st === ORDER_STATUS.SELESAI) return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+            if (st === ORDER_STATUS.BATAL) return 'bg-red-100 text-red-800 border-red-200';
+            return 'bg-gray-100 text-gray-700 border-gray-200'; // status tidak dikenal
+        }
 
-                    <!-- Search & Filter Controls -->
-                    <div class="space-y-2.5">
-                        <div class="relative">
-                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-400 text-sm"></i>
-                            <input type="text" id="booking-search-input" value="${bookingSearchQuery}" oninput="handleBookingSearch(this.value)" placeholder="Cari nama pemesan atau menu roti..." class="w-full bg-white border border-gray-200 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-gray-800 focus:outline-none focus:border-bakery-500 font-medium shadow-sm">
-                        </div>
-                        <div class="flex space-x-1.5 overflow-x-auto hide-scrollbar pb-1">
-            `;
+        function orderMatchesSearch(order, query) {
+            const q = String(query || '').trim().toLowerCase();
+            if (!q) return true;
+            const menu = menuItems.find(m => m.id == order.menuId) || { name: '' };
+            return String(order.customer || '').toLowerCase().includes(q) || String(menu.name || '').toLowerCase().includes(q);
+        }
 
-            const statuses = ['ALL', 'Pending', 'Proses', 'Selesai', 'Batal'];
-            statuses.forEach(st => {
-                const isActive = bookingStatusFilter === st;
-                const label = st === 'ALL' ? 'Semua Status' : st;
-                html += `
-                    <button onclick="filterBookingStatus('${st}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition border ${isActive ? 'bg-bakery-600 text-white border-bakery-600 shadow' : 'bg-white text-gray-600 border-gray-200 hover:bg-bakery-50'}">
-                        ${label}
-                    </button>
-                `;
-            });
-
-            html += `
-                        </div>
-                    </div>
-
-                    <!-- Booking List -->
-                    <div class="space-y-3">
-            `;
-
-            let filtered = bookings.filter(b => {
-                const menu = menuItems.find(m => m.id == b.menuId) || { name: '' };
-                const matchSearch = b.customer.toLowerCase().includes(bookingSearchQuery.toLowerCase()) || menu.name.toLowerCase().includes(bookingSearchQuery.toLowerCase());
-                const matchStatus = bookingStatusFilter === 'ALL' || b.status === bookingStatusFilter;
-                return matchSearch && matchStatus;
-            }).sort((a,b) => b.date.localeCompare(a.date));
-
-            if (filtered.length === 0) {
-                html += `
-                    <div class="bg-white rounded-3xl p-8 text-center border border-gray-100 shadow-sm">
-                        <i class="fa-solid fa-folder-open text-gray-300 text-3xl mb-2"></i>
-                        <p class="text-sm font-bold text-gray-800">Tidak ada pesanan ditemukan</p>
-                        <p class="text-xs text-gray-400 mt-1">Coba ubah kata kunci pencarian atau filter status.</p>
-                    </div>
-                `;
-            } else {
-                filtered.forEach(order => {
-                    const menu = menuItems.find(m => m.id == order.menuId) || { name: 'Menu Dihapus', price: 0 };
-                    const totalPrice = menu.price * order.qty;
-
-                    let statusBadge = '';
-                    if (order.status === 'Pending') statusBadge = 'bg-amber-100 text-amber-800 border-amber-200';
-                    else if (order.status === 'Proses') statusBadge = 'bg-blue-100 text-blue-800 border-blue-200';
-                    else if (order.status === 'Selesai') statusBadge = 'bg-emerald-100 text-emerald-800 border-emerald-200';
-                    else statusBadge = 'bg-red-100 text-red-800 border-red-200';
-
-                    html += `
+        // Kartu pesanan (dipakai daftar aktif & Riwayat Pesanan)
+        function renderBookingCardHTML(order) {
+            const menu = menuItems.find(m => m.id == order.menuId) || { name: 'Menu Dihapus', price: 0 };
+            const totalPrice = menu.price * order.qty;
+            const statusBadge = getStatusBadgeClass(order.status);
+            return `
                         <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 space-y-3 relative hover:border-bakery-300 transition">
                             <div class="flex items-center justify-between border-b border-gray-100 pb-2.5">
                                 <div class="flex items-center space-x-2">
@@ -597,10 +660,10 @@
                                     </span>
                                 </div>
                                 <select onchange="updateOrderStatus(${order.id}, this.value)" class="text-xs font-bold px-2.5 py-1 rounded-full border ${statusBadge} focus:outline-none cursor-pointer">
-                                    <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                                    <option value="Proses" ${order.status === 'Proses' ? 'selected' : ''}>Proses</option>
-                                    <option value="Selesai" ${order.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
-                                    <option value="Batal" ${order.status === 'Batal' ? 'selected' : ''}>Batal</option>
+                                    <option value="${ORDER_STATUS.PENDING}" ${normalizeStatus(order.status) === ORDER_STATUS.PENDING ? 'selected' : ''}>Pending</option>
+                                    <option value="${ORDER_STATUS.PROSES}" ${normalizeStatus(order.status) === ORDER_STATUS.PROSES ? 'selected' : ''}>Proses</option>
+                                    <option value="${ORDER_STATUS.SELESAI}" ${normalizeStatus(order.status) === ORDER_STATUS.SELESAI ? 'selected' : ''}>Selesai</option>
+                                    <option value="${ORDER_STATUS.BATAL}" ${normalizeStatus(order.status) === ORDER_STATUS.BATAL ? 'selected' : ''}>Batal</option>
                                 </select>
                             </div>
                             <div class="flex justify-between items-start">
@@ -615,6 +678,9 @@
                                 </div>
                             </div>
                             <div class="flex items-center justify-end space-x-2 pt-1 border-t border-gray-50">
+                                <button type="button" onclick="event.stopPropagation(); openInvoicePreview(${order.id})" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-bakery-100 text-gray-600 hover:text-bakery-700 flex items-center justify-center text-xs transition" title="Cetak Invoice" aria-label="Cetak Invoice">
+                                    <i class="fa-solid fa-print"></i>
+                                </button>
                                 <button onclick="editBooking(${order.id})" class="px-3 py-1 bg-gray-100 hover:bg-bakery-100 text-gray-700 hover:text-bakery-700 rounded-xl text-xs font-semibold transition flex items-center space-x-1">
                                     <i class="fa-solid fa-pen text-[10px]"></i><span>Edit</span>
                                 </button>
@@ -623,19 +689,96 @@
                                 </button>
                             </div>
                         </div>
-                    `;
-                });
+            `;
+        }
+
+        function renderBookingTab(container) {
+            if (bookingView === 'history') {
+                renderOrderHistory(container);
+                return;
             }
+            if (!ACTIVE_STATUS_FILTERS.includes(bookingStatusFilter)) bookingStatusFilter = 'ALL';
+
+            let html = `
+                <div class="p-4 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-10 h-10 shrink-0 rounded-2xl bg-gradient-to-br from-bakery-400 to-bakery-700 text-white flex items-center justify-center shadow-md shadow-bakery-500/30 ring-4 ring-bakery-100">
+                                <i class="fa-solid fa-calendar-check text-base"></i>
+                            </div>
+                            <h2 class="text-lg font-extrabold text-gray-900 tracking-tight">Kelola Booking</h2>
+                        </div>
+                        <button onclick="openQuickBookingModal()" class="px-3.5 py-2 bg-bakery-600 text-white rounded-xl text-xs font-bold shadow hover:bg-bakery-700 transition flex items-center space-x-1.5">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Tambah Booking</span>
+                        </button>
+                    </div>
+
+                    <!-- Search & Filter Controls -->
+                    <div class="space-y-2.5">
+                        <div class="relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-400 text-sm"></i>
+                            <input type="text" id="booking-search-input" value="${escapeHTML(bookingSearchQuery)}" oninput="handleBookingSearch(this.value)" placeholder="Cari nama pemesan atau menu roti..." class="w-full bg-white border border-gray-200 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-gray-800 focus:outline-none focus:border-bakery-500 font-medium shadow-sm">
+                        </div>
+                        <div class="flex space-x-1.5 overflow-x-auto hide-scrollbar pb-1">
+            `;
+
+            ACTIVE_STATUS_FILTERS.forEach(st => {
+                const isActive = bookingStatusFilter === st;
+                const label = st === 'ALL' ? 'Semua Status' : st;
+                html += `
+                    <button onclick="filterBookingStatus('${st}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition border ${isActive ? 'bg-bakery-600 text-white border-bakery-600 shadow' : 'bg-white text-gray-600 border-gray-200 hover:bg-bakery-50'}">
+                        ${label}
+                    </button>
+                `;
+            });
 
             html += `
+                        </div>
+                        <!-- Tombol Riwayat Pesanan -->
+                        <button onclick="openOrderHistory()" class="w-full bg-white border border-gray-200 hover:border-bakery-300 hover:bg-bakery-50/60 rounded-2xl px-3.5 py-3 shadow-sm flex items-center justify-between transition text-left">
+                            <span class="flex items-center space-x-3 min-w-0">
+                                <span class="w-9 h-9 shrink-0 rounded-xl bg-bakery-50 text-bakery-600 flex items-center justify-center"><i class="fa-solid fa-clock-rotate-left text-sm"></i></span>
+                                <span class="min-w-0">
+                                    <span class="block text-xs font-bold text-gray-900">Riwayat Pesanan</span>
+                                    <span class="block text-[10px] text-gray-500 truncate">Semua pesanan per bulan, termasuk Selesai &amp; Batal</span>
+                                </span>
+                            </span>
+                            <i class="fa-solid fa-chevron-right text-gray-400 text-xs ml-2"></i>
+                        </button>
                     </div>
+
+                    <!-- Booking List (hanya pesanan aktif) -->
+                    <div id="booking-list" class="space-y-3">${getActiveBookingListHTML()}</div>
                 </div>
             `;
             container.innerHTML = html;
         }
 
+        function getActiveBookingListHTML() {
+            const filtered = bookings.filter(b =>
+                isActiveOrder(b) &&
+                orderMatchesSearch(b, bookingSearchQuery) &&
+                (bookingStatusFilter === 'ALL' || normalizeStatus(b.status) === bookingStatusFilter)
+            ).sort((a,b) => b.date.localeCompare(a.date));
+
+            if (filtered.length === 0) {
+                const hasQuery = bookingSearchQuery.trim() !== '' || bookingStatusFilter !== 'ALL';
+                return `
+                    <div class="bg-white rounded-3xl p-8 text-center border border-gray-100 shadow-sm">
+                        <i class="fa-solid fa-folder-open text-gray-300 text-3xl mb-2"></i>
+                        <p class="text-sm font-bold text-gray-800">${hasQuery ? 'Tidak ada pesanan ditemukan' : 'Tidak ada pesanan aktif'}</p>
+                        <p class="text-xs text-gray-400 mt-1">${hasQuery ? 'Coba ubah kata kunci pencarian atau filter status.' : 'Pesanan Selesai dan Batal dapat dilihat di Riwayat Pesanan.'}</p>
+                    </div>
+                `;
+            }
+            return filtered.map(renderBookingCardHTML).join('');
+        }
+
         function handleBookingSearch(val) {
             bookingSearchQuery = val;
+            const list = document.getElementById('booking-list');
+            if (list) list.innerHTML = getActiveBookingListHTML();
         }
 
         function filterBookingStatus(st) {
@@ -646,10 +789,240 @@
         function updateOrderStatus(id, newStatus) {
             const order = bookings.find(b => b.id === id);
             if (order) {
-                order.status = newStatus;
-                showToast(`Status pesanan diperbarui jadi ${newStatus}`);
+                order.status = normalizeStatus(newStatus) || newStatus;
+                const movedToHistory = !isActiveOrder(order) && bookingView === 'active';
+                showToast(movedToHistory ? `Pesanan ${getStatusLabel(order.status)} dipindahkan ke Riwayat` : `Status pesanan diperbarui jadi ${getStatusLabel(order.status)}`);
                 renderCurrentTab();
             }
+        }
+
+        // --- RIWAYAT PESANAN (sumber data yang sama: array bookings) ---
+        let historyMonth = '';          // 'YYYY-MM' (jadwal booking)
+        let historySearchQuery = '';
+
+        function getCurrentMonthStr() {
+            return formatDateStr(new Date()).slice(0, 7); // pakai tanggal lokal, bukan UTC
+        }
+
+        function openOrderHistory() {
+            bookingView = 'history';
+            historyMonth = getCurrentMonthStr();
+            historySearchQuery = '';
+            renderCurrentTab();
+            updateOrderHistory({ showLoading: true });
+            document.getElementById('main-content').scrollTop = 0;
+        }
+
+        function closeOrderHistory() {
+            bookingView = 'active';
+            renderCurrentTab();
+            document.getElementById('main-content').scrollTop = 0;
+        }
+
+        function shiftHistoryMonth(delta) {
+            let [y, m] = historyMonth.split('-').map(Number);
+            m += delta;
+            while (m > 12) { m -= 12; y++; }
+            while (m < 1) { m += 12; y--; }
+            historyMonth = `${y}-${String(m).padStart(2, '0')}`;
+            updateOrderHistory({ showLoading: true });
+        }
+
+        function setHistoryMonth(val) {
+            if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(val)) return;
+            historyMonth = val;
+            updateOrderHistory({ showLoading: true });
+        }
+
+        function handleHistorySearch(val) {
+            historySearchQuery = val;
+            updateOrderHistory();
+        }
+
+        function getHistoryOrders() {
+            return bookings
+                .filter(b => String(b.date || '').startsWith(historyMonth + '-') && orderMatchesSearch(b, historySearchQuery))
+                .sort((a, b) => b.date.localeCompare(a.date) || String(b.time || '').localeCompare(String(a.time || '')));
+        }
+
+        function getHistoryListHTML() {
+            const orders = getHistoryOrders();
+            if (orders.length === 0) {
+                const searching = historySearchQuery.trim() !== '';
+                return `
+                    <div class="bg-white rounded-3xl p-8 text-center border border-gray-100 shadow-sm">
+                        <div class="w-12 h-12 bg-bakery-50 rounded-full flex items-center justify-center mx-auto mb-3 text-bakery-500">
+                            <i class="fa-solid fa-${searching ? 'magnifying-glass' : 'box-open'} text-xl"></i>
+                        </div>
+                        <p class="text-sm font-bold text-gray-800">${searching ? 'Tidak ada pesanan yang cocok' : 'Belum ada riwayat pesanan pada bulan ini.'}</p>
+                        <p class="text-xs text-gray-400 mt-1">${searching ? `Tidak ditemukan pesanan untuk "${escapeHTML(historySearchQuery.trim())}" di ${formatDisplayMonth(historyMonth)}.` : 'Coba pilih bulan lain.'}</p>
+                    </div>
+                `;
+            }
+            const count = (st) => orders.filter(o => normalizeStatus(o.status) === st).length;
+            const unknown = orders.filter(o => !normalizeStatus(o.status)).length;
+            const chips = [[ORDER_STATUS.SELESAI, 'bg-emerald-50 text-emerald-700'], [ORDER_STATUS.PENDING, 'bg-amber-50 text-amber-700'], [ORDER_STATUS.PROSES, 'bg-blue-50 text-blue-700'], [ORDER_STATUS.BATAL, 'bg-red-50 text-red-700']]
+                .filter(([st]) => count(st) > 0)
+                .map(([st, cls]) => `<span class="px-2 py-0.5 rounded-full font-bold ${cls}">${count(st)} ${st}</span>`).join('')
+                + (unknown ? `<span class="px-2 py-0.5 rounded-full font-bold bg-gray-100 text-gray-600">${unknown} Lainnya</span>` : '');
+            return `
+                <div class="flex items-center justify-between gap-2 px-1">
+                    <p class="text-xs font-bold text-gray-700 shrink-0">${orders.length} pesanan</p>
+                    <div class="flex flex-wrap justify-end gap-1 text-[10px]">${chips}</div>
+                </div>
+                ${orders.map(renderHistoryCardHTML).join('')}
+            `;
+        }
+
+        // Kartu Riwayat. Pesanan Selesai/Batal = arsip (hanya baca + invoice).
+        // Pesanan yang masih aktif di bulan tsb tetap bisa dikelola seperti di daftar Booking.
+        function renderHistoryCardHTML(order) {
+            const menu = menuItems.find(m => m.id == order.menuId) || null;
+            const qty = Number(order.qty) || 0;
+            const archived = !isActiveOrder(order);
+            const statusBadge = getStatusBadgeClass(order.status);
+            const dateLabel = order.date ? formatDisplayDate(order.date) : '-';
+            const timeLabel = order.time ? `${escapeHTML(order.time)} WIB` : '';
+
+            const statusControl = archived
+                ? `<span class="text-xs font-bold px-2.5 py-1 rounded-full border ${statusBadge}">${escapeHTML(getStatusLabel(order.status))}</span>`
+                : `<select onchange="updateOrderStatus(${order.id}, this.value)" class="text-xs font-bold px-2.5 py-1 rounded-full border ${statusBadge} focus:outline-none cursor-pointer" aria-label="Ubah status pesanan">
+                        ${Object.values(ORDER_STATUS).map(st => `<option value="${st}" ${normalizeStatus(order.status) === st ? 'selected' : ''}>${st}</option>`).join('')}
+                   </select>`;
+
+            return `
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 space-y-3 relative hover:border-bakery-300 transition">
+                    <div class="flex items-center justify-between gap-2 border-b border-gray-100 pb-2.5">
+                        <span class="text-xs font-bold text-bakery-700 bg-bakery-50 px-2.5 py-1 rounded-xl min-w-0 truncate">
+                            <i class="fa-regular fa-calendar mr-1"></i> ${dateLabel}${timeLabel ? ` &middot; ${timeLabel}` : ''}
+                        </span>
+                        <div class="shrink-0">${statusControl}</div>
+                    </div>
+                    <div class="flex justify-between items-start gap-3">
+                        <div class="min-w-0">
+                            <h4 class="font-bold text-gray-900 text-sm break-words">${escapeHTML(order.customer || '-')}</h4>
+                            <p class="text-xs font-semibold text-gray-700 mt-0.5 break-words">${qty}x ${menu ? escapeHTML(menu.name) : '<span class="italic text-gray-400">Menu telah dihapus</span>'}</p>
+                            ${order.notes ? `<p class="text-[11px] text-gray-500 italic mt-1 break-words"><i class="fa-solid fa-note-sticky mr-1 text-bakery-400"></i> ${escapeHTML(order.notes)}</p>` : ''}
+                        </div>
+                        <div class="text-right shrink-0">
+                            <p class="text-xs font-extrabold text-bakery-900">${menu ? formatIDR(menu.price * qty) : '-'}</p>
+                            <p class="text-[10px] text-gray-400 mt-0.5">${menu ? '@ ' + formatIDR(menu.price) : ''}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between space-x-2 pt-1 border-t border-gray-50">
+                        <span class="text-[10px] text-gray-400 font-medium">${archived ? '<i class="fa-solid fa-box-archive mr-1"></i> Arsip' : '<i class="fa-solid fa-circle-play mr-1"></i> Masih aktif'}</span>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="openInvoicePreview(${order.id})" class="px-3 py-1 bg-gray-100 hover:bg-bakery-100 text-gray-700 hover:text-bakery-700 rounded-xl text-xs font-semibold transition flex items-center space-x-1" title="Cetak Invoice" aria-label="Cetak Invoice">
+                                <i class="fa-solid fa-print text-[10px]"></i><span>Invoice</span>
+                            </button>
+                            ${archived ? '' : `
+                            <button onclick="editBooking(${order.id})" class="px-3 py-1 bg-gray-100 hover:bg-bakery-100 text-gray-700 hover:text-bakery-700 rounded-xl text-xs font-semibold transition flex items-center space-x-1">
+                                <i class="fa-solid fa-pen text-[10px]"></i><span>Edit</span>
+                            </button>
+                            <button onclick="deleteBooking(${order.id})" class="px-3 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-semibold transition flex items-center space-x-1">
+                                <i class="fa-solid fa-trash text-[10px]"></i><span>Hapus</span>
+                            </button>`}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getHistoryLoadingHTML() {
+            return `
+                <div class="bg-white rounded-3xl p-8 text-center border border-gray-100 shadow-sm" aria-live="polite">
+                    <div class="w-9 h-9 border-4 border-bakery-100 border-t-bakery-600 rounded-full animate-spin mx-auto"></div>
+                    <p class="text-xs font-bold text-gray-700 mt-3">Memuat riwayat pesanan...</p>
+                </div>
+            `;
+        }
+
+        function getHistoryErrorHTML(err) {
+            return `
+                <div class="bg-white rounded-3xl p-8 text-center border border-red-100 shadow-sm" role="alert">
+                    <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-3 text-red-500">
+                        <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                    </div>
+                    <p class="text-sm font-bold text-gray-800">Gagal memuat riwayat pesanan</p>
+                    <p class="text-xs text-gray-400 mt-1">${escapeHTML(err && err.message ? err.message : 'Terjadi kesalahan tidak dikenal.')}</p>
+                    <button onclick="updateOrderHistory({ showLoading: true })" class="mt-4 px-4 py-2 bg-bakery-600 text-white rounded-xl text-xs font-bold shadow hover:bg-bakery-700 transition">
+                        Coba Lagi
+                    </button>
+                </div>
+            `;
+        }
+
+        function getSafeHistoryListHTML() {
+            try {
+                return getHistoryListHTML();
+            } catch (err) {
+                console.error(err);
+                return getHistoryErrorHTML(err);
+            }
+        }
+
+        // Perbarui label bulan + daftar tanpa me-render ulang input pencarian (fokus tidak hilang).
+        // showLoading: tampilkan indikator saat ganti bulan / buka riwayat.
+        let historyRenderToken = 0;
+        function updateOrderHistory(opts = {}) {
+            const label = document.getElementById('history-month-label');
+            const input = document.getElementById('history-month-input');
+            const list = document.getElementById('history-list');
+            if (label) label.innerText = formatDisplayMonth(historyMonth);
+            if (input) input.value = historyMonth;
+            if (!list) return;
+            const token = ++historyRenderToken;
+            if (!opts.showLoading) { list.innerHTML = getSafeHistoryListHTML(); return; }
+            list.innerHTML = getHistoryLoadingHTML();
+            setTimeout(() => {
+                if (token !== historyRenderToken) return; // ada permintaan yang lebih baru
+                const current = document.getElementById('history-list');
+                if (current) current.innerHTML = getSafeHistoryListHTML();
+            }, 150);
+        }
+
+        function renderOrderHistory(container) {
+            if (!historyMonth) historyMonth = getCurrentMonthStr();
+            container.innerHTML = `
+                <div class="p-4 space-y-4">
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-10 h-10 shrink-0 rounded-2xl bg-gradient-to-br from-bakery-400 to-bakery-700 text-white flex items-center justify-center shadow-md shadow-bakery-500/30 ring-4 ring-bakery-100">
+                                <i class="fa-solid fa-clock-rotate-left text-base"></i>
+                            </div>
+                            <h2 class="text-lg font-extrabold text-gray-900 tracking-tight">Riwayat Pesanan</h2>
+                        </div>
+                        <button onclick="closeOrderHistory()" class="px-3.5 py-2 shrink-0 bg-white border border-gray-200 text-gray-700 rounded-xl text-xs font-bold shadow-sm hover:bg-bakery-50 hover:text-bakery-700 transition flex items-center space-x-1.5" aria-label="Kembali ke Kelola Booking">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span>Kembali</span>
+                        </button>
+                    </div>
+
+                    <div class="space-y-2.5">
+                        <!-- Filter Bulan -->
+                        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-1.5 flex items-center justify-between">
+                            <button onclick="shiftHistoryMonth(-1)" class="w-9 h-9 shrink-0 rounded-xl hover:bg-bakery-50 text-gray-600 hover:text-bakery-700 flex items-center justify-center transition" aria-label="Bulan sebelumnya">
+                                <i class="fa-solid fa-chevron-left text-xs"></i>
+                            </button>
+                            <label class="relative flex-1 flex items-center justify-center cursor-pointer py-1.5 rounded-xl hover:bg-bakery-50/60 transition">
+                                <i class="fa-regular fa-calendar text-bakery-500 mr-2 text-sm"></i>
+                                <span id="history-month-label" class="text-sm font-extrabold text-gray-900">${formatDisplayMonth(historyMonth)}</span>
+                                <input type="month" id="history-month-input" value="${historyMonth}" onchange="setHistoryMonth(this.value)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" aria-label="Pilih bulan riwayat">
+                            </label>
+                            <button onclick="shiftHistoryMonth(1)" class="w-9 h-9 shrink-0 rounded-xl hover:bg-bakery-50 text-gray-600 hover:text-bakery-700 flex items-center justify-center transition" aria-label="Bulan berikutnya">
+                                <i class="fa-solid fa-chevron-right text-xs"></i>
+                            </button>
+                        </div>
+                        <!-- Pencarian -->
+                        <div class="relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-400 text-sm"></i>
+                            <input type="text" id="history-search-input" value="${escapeHTML(historySearchQuery)}" oninput="handleHistorySearch(this.value)" placeholder="Cari nama pemesan atau menu roti..." class="w-full bg-white border border-gray-200 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-gray-800 focus:outline-none focus:border-bakery-500 font-medium shadow-sm">
+                        </div>
+                    </div>
+
+                    <div id="history-list" class="space-y-3">${getSafeHistoryListHTML()}</div>
+                </div>
+            `;
         }
 
 
@@ -658,7 +1031,7 @@
 
         function renderPnlTab(container) {
             // Filter bookings for selected month
-            let monthBookings = bookings.filter(b => b.date.startsWith(selectedPnlMonth) && b.status !== 'Batal');
+            let monthBookings = bookings.filter(b => b.date.startsWith(selectedPnlMonth) && !isCancelledOrder(b));
 
             let grossRevenue = 0;
             let totalHpp = 0;
@@ -673,17 +1046,25 @@
                 }
             });
 
-            // Estimated operational expenses (fixed percentage or dummy realistic baker overhead)
-            const operationalExpense = Math.round(grossRevenue * 0.18) + 1500000; // Listrik, gas, sewa, gaji
+            // Rumus P&L:
+            // Biaya Operasional Est. = Total Pendapatan × 10%
+            // Laba Bersih            = Total Pendapatan − Total HPP − Biaya Operasional Est.
+            // Margin Laba Bersih     = (Laba Bersih ÷ Total Pendapatan) × 100%
+            const OPERATIONAL_EXPENSE_RATE = 0.10;
+            const operationalExpense = Math.round(grossRevenue * OPERATIONAL_EXPENSE_RATE);
             const netProfit = grossRevenue - totalHpp - operationalExpense;
             const profitMargin = grossRevenue > 0 ? ((netProfit / grossRevenue) * 100).toFixed(1) : 0;
 
             let html = `
                 <div class="p-4 space-y-4">
                     <div class="flex items-center justify-between">
-                        <div>
-                            <h2 class="text-lg font-extrabold text-gray-900 tracking-tight">Laba & Rugi (P&L)</h2>
-                            <p class="text-xs text-gray-500">Otomatis kalkulasi HPP dan margin</p>
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-10 h-10 shrink-0 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-700 text-white flex items-center justify-center shadow-md shadow-emerald-500/30 ring-4 ring-emerald-100">
+                                <i class="fa-solid fa-chart-line text-base"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <h2 class="text-lg font-extrabold text-gray-900 tracking-tight">Laba & Rugi (P&L)</h2>
+                            </div>
                         </div>
                         <input type="month" id="pnl-month-select" value="${selectedPnlMonth}" onchange="changePnlMonth(this.value)" class="bg-white border border-gray-200 text-xs font-bold text-gray-800 px-3 py-2 rounded-xl focus:outline-none focus:border-bakery-500 shadow-sm">
                     </div>
@@ -798,9 +1179,14 @@
             let html = `
                 <div class="p-4 space-y-4">
                     <div class="flex items-center justify-between">
-                        <div>
-                            <h2 class="text-lg font-extrabold text-gray-900 tracking-tight">Manajemen Menu & Harga</h2>
-                            <p class="text-xs text-gray-500">Atur HPP, harga jual, dan produk roti</p>
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-10 h-10 shrink-0 rounded-2xl bg-gradient-to-br from-amber-400 to-terracotta-700 text-white flex items-center justify-center shadow-md shadow-amber-500/30 ring-4 ring-amber-100">
+                                <i class="fa-solid fa-bread-slice text-base"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <h2 class="text-lg font-extrabold text-gray-900 tracking-tight">Manajemen Menu & Harga</h2>
+                                <p class="text-xs text-gray-500">Atur HPP, harga jual, dan produk roti</p>
+                            </div>
                         </div>
                         <button onclick="openMenuModal()" class="px-3.5 py-2 bg-bakery-600 text-white rounded-xl text-xs font-bold shadow hover:bg-bakery-700 transition flex items-center space-x-1.5">
                             <i class="fa-solid fa-plus"></i>
@@ -1024,7 +1410,7 @@
             document.getElementById('order-date').value = order.date;
             document.getElementById('order-time').value = order.time;
             document.getElementById('order-qty').value = order.qty;
-            document.getElementById('order-status').value = order.status;
+            document.getElementById('order-status').value = normalizeStatus(order.status) || ORDER_STATUS.PENDING;
             document.getElementById('order-notes').value = order.notes || '';
             renderModalMenuItems(order.menuId);
             document.getElementById('booking-modal').classList.remove('hidden');
@@ -1117,6 +1503,525 @@
             if (confirm('Reset seluruh data ke kondisi awal?')) {
                 location.reload();
             }
+        }
+
+        // =====================================================================
+        // --- INVOICE COMPONENT (reusable) ---
+        // buildInvoiceData(orderId)  -> objek data invoice dari pesanan
+        // renderInvoiceHTML(data)    -> HTML preview A4
+        // InvoicePDF.create(data)    -> Blob PDF A4 (tanpa library eksternal, bisa offline)
+        // openInvoicePreview(orderId) dapat dipanggil dari kartu pesanan mana pun.
+        // =====================================================================
+        const BUSINESS_INFO = { name: 'Daily Bread', tagline: 'Bakery & Pastry Studio' };
+
+        function formatRupiah(amount) {
+            return 'Rp ' + Math.round(Number(amount)).toLocaleString('id-ID');
+        }
+
+        function formatLongDate(dateStr) {
+            const parts = String(dateStr || '').split('-').map(Number);
+            if (parts.length !== 3 || parts.some(isNaN)) return null;
+            const d = new Date(parts[0], parts[1] - 1, parts[2]);
+            return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        function escapeHTML(str) {
+            return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        function generateInvoiceNumber(order) {
+            // Unik per pesanan: tanggal pesanan + ID pesanan (base36)
+            const datePart = String(order.date || '').replace(/-/g, '') || '00000000';
+            const idPart = Number(order.id).toString(36).toUpperCase().padStart(4, '0');
+            return `DB-${datePart}-${idPart}`;
+        }
+
+        function buildInvoiceData(orderId) {
+            const order = bookings.find(b => b.id === orderId);
+            if (!order) throw new Error('Data pesanan tidak ditemukan. Pesanan mungkin sudah dihapus.');
+
+            const menu = menuItems.find(m => m.id == order.menuId) || null;
+            const qty = Number(order.qty) || 0;
+            const unitPrice = menu && isFinite(menu.price) ? Number(menu.price) : null;
+
+            // Disusun sebagai array agar siap untuk pesanan multi-produk
+            const items = [{
+                name: menu ? menu.name : null,
+                category: menu ? (menu.category || null) : null,
+                desc: menu ? (menu.desc || null) : null,
+                qty: qty,
+                unitPrice: unitPrice,
+                subtotal: unitPrice !== null ? unitPrice * qty : null
+            }];
+            const allPriced = items.every(i => i.subtotal !== null);
+            const total = allPriced ? items.reduce((s, i) => s + i.subtotal, 0) : null;
+
+            const now = new Date();
+            return {
+                number: generateInvoiceNumber(order),
+                invoiceDate: now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
+                printedAt: now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) + ' ' +
+                           now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':'),
+                orderId: order.id,
+                orderDate: formatLongDate(order.date),
+                orderTime: order.time ? `${order.time} WIB` : null,
+                customer: (order.customer || '').trim() || null,
+                status: order.status ? getStatusLabel(order.status) : null,
+                notes: (order.notes || '').trim() || null,
+                items: items,
+                total: total
+            };
+        }
+
+        function renderInvoiceHTML(data) {
+            const v = (x) => (x === null || x === undefined || x === '') ? '-' : escapeHTML(x);
+            const money = (x) => x === null ? '-' : formatRupiah(x);
+
+            const rows = data.items.map((it, idx) => `
+                <tr>
+                    <td class="c">${idx + 1}</td>
+                    <td>
+                        ${it.name ? `<div class="inv-item-name">${escapeHTML(it.name)}</div>` : `<div class="inv-muted">Produk tidak tersedia (menu telah dihapus)</div>`}
+                        ${it.category ? `<div class="inv-item-sub">${escapeHTML(it.category)}</div>` : ''}
+                        ${it.desc ? `<div class="inv-item-sub">${escapeHTML(it.desc)}</div>` : ''}
+                    </td>
+                    <td class="c">${it.qty}</td>
+                    <td class="r">${money(it.unitPrice)}</td>
+                    <td class="r" style="font-weight:700">${money(it.subtotal)}</td>
+                </tr>`).join('');
+
+            return `
+                <div class="inv-head">
+                    <div class="inv-brand">
+                        <div class="inv-logo"><i class="fa-solid fa-wheat-awn"></i></div>
+                        <div>
+                            <div class="inv-brand-name">${BUSINESS_INFO.name}</div>
+                            <div class="inv-brand-sub">${BUSINESS_INFO.tagline}</div>
+                        </div>
+                    </div>
+                    <div class="inv-title">
+                        <h2>INVOICE</h2>
+                        <p>No. <b>${escapeHTML(data.number)}</b></p>
+                    </div>
+                </div>
+
+                <div class="inv-info">
+                    <div>
+                        <div class="inv-label">Ditagihkan Kepada</div>
+                        <div class="inv-customer">${v(data.customer)}</div>
+                    </div>
+                    <div class="inv-meta">
+                        <div class="inv-meta-row"><span>Tanggal Invoice</span><span>${v(data.invoiceDate)}</span></div>
+                        <div class="inv-meta-row"><span>Tanggal Pesanan</span><span>${v(data.orderDate)}</span></div>
+                        <div class="inv-meta-row"><span>Waktu Ambil/Kirim</span><span>${v(data.orderTime)}</span></div>
+                        <div class="inv-meta-row"><span>ID Pesanan</span><span>${v(data.orderId)}</span></div>
+                        <div class="inv-meta-row"><span>Status</span><span>${data.status ? `<span class="inv-status">${escapeHTML(data.status)}</span>` : '-'}</span></div>
+                    </div>
+                </div>
+
+                <table class="inv-table">
+                    <thead>
+                        <tr>
+                            <th class="c" style="width:44px;text-align:center">No</th>
+                            <th>Produk</th>
+                            <th style="width:64px;text-align:center">Qty</th>
+                            <th style="width:128px;text-align:right">Harga Satuan</th>
+                            <th style="width:136px;text-align:right">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+
+                <div class="inv-totals">
+                    <div class="inv-meta-row"><span style="color:#6b7280">Subtotal</span><span style="font-weight:700">${money(data.total)}</span></div>
+                    <div class="inv-grand"><span>Total Pembayaran</span><span>${money(data.total)}</span></div>
+                </div>
+
+                ${data.notes ? `
+                <div class="inv-notes">
+                    <div class="inv-label">Catatan Pesanan</div>
+                    <div class="inv-notes-box">${escapeHTML(data.notes)}</div>
+                </div>` : ''}
+
+                <div class="inv-foot" style="margin-top:auto">
+                    <span>Terima kasih telah berbelanja di ${BUSINESS_INFO.name}.<br>Dicetak: ${escapeHTML(data.printedAt)}</span>
+                    <span style="text-align:right">${BUSINESS_INFO.name} - ${BUSINESS_INFO.tagline}</span>
+                </div>
+            `;
+        }
+
+        // --- Pembuat PDF A4 ringan (vector, font standar Helvetica) ---
+        const InvoicePDF = (() => {
+            const WIDTHS = {
+                F1: [278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584],
+                F2: [278,333,474,556,556,889,722,238,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,333,333,584,584,584,611,975,722,722,722,722,667,611,778,722,278,556,722,611,833,722,778,667,778,722,667,611,722,667,944,667,667,611,333,278,333,584,556,333,556,611,556,611,556,333,611,611,278,278,556,278,889,611,611,611,611,389,556,333,611,556,778,556,556,500,389,280,389,584]
+            };
+            const PT = 72 / 25.4;          // mm -> pt
+            const PAGE_W = 210, PAGE_H = 297;
+            const n = (x) => (Math.round(x * 100) / 100).toString();
+
+            // Font standar PDF hanya mendukung karakter Latin dasar
+            function clean(s) {
+                return String(s ?? '')
+                    .replace(/[\t\r\n]+/g, ' ')
+                    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+                    .replace(/[–—]/g, '-').replace(/[‘’]/g, "'").replace(/[“”]/g, '"')
+                    .replace(/…/g, '...').replace(/[  ]/g, ' ')
+                    .replace(/[^\x20-\x7E]/g, '?');
+            }
+            function textWidth(s, font, size) {
+                let w = 0;
+                for (let i = 0; i < s.length; i++) w += WIDTHS[font][s.charCodeAt(i) - 32] || 556;
+                return w * size / 1000 / PT; // dalam mm
+            }
+            function wrap(s, font, size, maxW) {
+                const words = clean(s).split(' ').filter(Boolean);
+                const lines = []; let line = '';
+                const pushLong = (w) => { // pecah kata yang terlalu panjang
+                    let chunk = '';
+                    for (const ch of w) {
+                        if (textWidth(chunk + ch, font, size) > maxW && chunk) { lines.push(chunk); chunk = ''; }
+                        chunk += ch;
+                    }
+                    return chunk;
+                };
+                words.forEach(w => {
+                    const test = line ? line + ' ' + w : w;
+                    if (textWidth(test, font, size) <= maxW) { line = test; return; }
+                    if (line) lines.push(line);
+                    line = textWidth(w, font, size) > maxW ? pushLong(w) : w;
+                });
+                if (line) lines.push(line);
+                return lines.length ? lines : [''];
+            }
+            const esc = (s) => s.replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+            const rgb = (c) => c.map(v => n(v / 255)).join(' ');
+
+            class Doc {
+                constructor() { this.pages = []; this.addPage(); }
+                addPage() { this.ops = []; this.pages.push(this.ops); }
+                text(str, x, y, o = {}) {
+                    const font = o.font || 'F1', size = o.size || 10, s = clean(str);
+                    let px = x;
+                    if (o.align === 'right') px = x - textWidth(s, font, size);
+                    else if (o.align === 'center') px = x - textWidth(s, font, size) / 2;
+                    this.ops.push(`BT /${font} ${size} Tf ${rgb(o.color || [31,41,55])} rg ${n(px * PT)} ${n((PAGE_H - y) * PT)} Td (${esc(s)}) Tj ET`);
+                }
+                line(x1, y1, x2, y2, o = {}) {
+                    this.ops.push(`${rgb(o.color || [229,231,235])} RG ${n((o.width || 0.3) * PT)} w ${n(x1 * PT)} ${n((PAGE_H - y1) * PT)} m ${n(x2 * PT)} ${n((PAGE_H - y2) * PT)} l S`);
+                }
+                rect(x, y, w, h, o = {}) {
+                    const r = Math.min(o.radius || 0, w / 2, h / 2);
+                    const X = x * PT, Y = (PAGE_H - y - h) * PT, W = w * PT, H = h * PT, R = r * PT, k = 0.5523 * R;
+                    let path;
+                    if (!R) path = `${n(X)} ${n(Y)} ${n(W)} ${n(H)} re`;
+                    else path = [
+                        `${n(X + R)} ${n(Y)} m`, `${n(X + W - R)} ${n(Y)} l`,
+                        `${n(X + W - R + k)} ${n(Y)} ${n(X + W)} ${n(Y + R - k)} ${n(X + W)} ${n(Y + R)} c`,
+                        `${n(X + W)} ${n(Y + H - R)} l`,
+                        `${n(X + W)} ${n(Y + H - R + k)} ${n(X + W - R + k)} ${n(Y + H)} ${n(X + W - R)} ${n(Y + H)} c`,
+                        `${n(X + R)} ${n(Y + H)} l`,
+                        `${n(X + R - k)} ${n(Y + H)} ${n(X)} ${n(Y + H - R + k)} ${n(X)} ${n(Y + H - R)} c`,
+                        `${n(X)} ${n(Y + R)} l`,
+                        `${n(X)} ${n(Y + R - k)} ${n(X + R - k)} ${n(Y)} ${n(X + R)} ${n(Y)} c h`
+                    ].join(' ');
+                    let paint = 'n';
+                    let style = '';
+                    if (o.fill) style += `${rgb(o.fill)} rg `;
+                    if (o.stroke) style += `${rgb(o.stroke)} RG ${n((o.width || 0.3) * PT)} w `;
+                    if (o.fill && o.stroke) paint = 'B'; else if (o.fill) paint = 'f'; else if (o.stroke) paint = 'S';
+                    this.ops.push(`${style}${path} ${paint}`);
+                }
+                ellipse(cx, cy, rx, ry, angleDeg, fill) {
+                    const a = angleDeg * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
+                    const RX = rx * PT, RY = ry * PT, kx = 0.5523 * RX, ky = 0.5523 * RY;
+                    this.ops.push(`q ${n(c)} ${n(s)} ${n(-s)} ${n(c)} ${n(cx * PT)} ${n((PAGE_H - cy) * PT)} cm ${rgb(fill)} rg ` +
+                        `${n(RX)} 0 m ${n(RX)} ${n(ky)} ${n(kx)} ${n(RY)} 0 ${n(RY)} c ${n(-kx)} ${n(RY)} ${n(-RX)} ${n(ky)} ${n(-RX)} 0 c ` +
+                        `${n(-RX)} ${n(-ky)} ${n(-kx)} ${n(-RY)} 0 ${n(-RY)} c ${n(kx)} ${n(-RY)} ${n(RX)} ${n(-ky)} ${n(RX)} 0 c f Q`);
+                }
+                toBlob(title) {
+                    const objs = [];
+                    const add = (s) => { objs.push(s); return objs.length; };
+                    const catalogId = add(null), pagesId = add(null);
+                    const f1 = add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>');
+                    const f2 = add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>');
+                    const kids = [];
+                    this.pages.forEach(ops => {
+                        const content = ops.join('\n');
+                        const cId = add(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
+                        kids.push(add(`<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 ${n(PAGE_W * PT)} ${n(PAGE_H * PT)}] /Resources << /Font << /F1 ${f1} 0 R /F2 ${f2} 0 R >> >> /Contents ${cId} 0 R >>`));
+                    });
+                    objs[catalogId - 1] = `<< /Type /Catalog /Pages ${pagesId} 0 R >>`;
+                    objs[pagesId - 1] = `<< /Type /Pages /Kids [${kids.map(k => k + ' 0 R').join(' ')}] /Count ${kids.length} >>`;
+                    const infoId = add(`<< /Title (${esc(clean(title))}) /Producer (Daily Bread App) >>`);
+
+                    let out = '%PDF-1.4\n';
+                    const offsets = [];
+                    objs.forEach((o, i) => { offsets.push(out.length); out += `${i + 1} 0 obj\n${o}\nendobj\n`; });
+                    const xref = out.length;
+                    out += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n`;
+                    offsets.forEach(off => { out += String(off).padStart(10, '0') + ' 00000 n \n'; });
+                    out += `trailer\n<< /Size ${objs.length + 1} /Root ${catalogId} 0 R /Info ${infoId} 0 R >>\nstartxref\n${xref}\n%%EOF`;
+                    return new Blob([out], { type: 'application/pdf' });
+                }
+            }
+
+            const C = {
+                orange: [234,88,12], orangeDark: [194,65,12], brown: [154,52,18], cream: [255,247,237],
+                ink: [17,24,39], text: [31,41,55], muted: [107,114,128], light: [229,231,235], white: [255,255,255]
+            };
+            const M = 18, RIGHT = PAGE_W - M, BOTTOM = PAGE_H - 26;
+
+            function drawLogo(doc, x, y, size) {
+                doc.rect(x, y, size, size, { fill: C.orange, radius: size * 0.23 });
+                const cx = x + size / 2, s = size / 16;
+                doc.line(cx, y + 13.2 * s, cx, y + 4.2 * s, { color: C.white, width: 0.9 * s });
+                [[5.2], [7.9], [10.6]].forEach(([yy]) => {
+                    doc.ellipse(cx - 1.35 * s, y + yy * s, 0.95 * s, 1.9 * s, 35, C.white);
+                    doc.ellipse(cx + 1.35 * s, y + yy * s, 0.95 * s, 1.9 * s, -35, C.white);
+                });
+                doc.ellipse(cx, y + 3.2 * s, 0.9 * s, 1.8 * s, 0, C.white);
+            }
+
+            const COLS = [
+                { key: 'no',  label: 'No',           x: M,     w: 10, align: 'center' },
+                { key: 'prd', label: 'Produk',       x: M + 10, w: 80, align: 'left' },
+                { key: 'qty', label: 'Qty',          x: M + 90, w: 16, align: 'center' },
+                { key: 'prc', label: 'Harga Satuan', x: M + 106, w: 33, align: 'right' },
+                { key: 'sub', label: 'Subtotal',     x: M + 139, w: 35, align: 'right' }
+            ];
+            const PAD = 2.5;
+            const cellX = (col) => col.align === 'right' ? col.x + col.w - PAD : col.align === 'center' ? col.x + col.w / 2 : col.x + PAD;
+
+            function drawTableHeader(doc, y) {
+                doc.rect(M, y, RIGHT - M, 8, { fill: C.orangeDark });
+                COLS.forEach(col => doc.text(col.label, cellX(col), y + 5.4, { font: 'F2', size: 8.5, color: C.white, align: col.align }));
+                return y + 8;
+            }
+
+            function create(data) {
+                const doc = new Doc();
+                const money = (x) => x === null ? '-' : formatRupiah(x);
+                const dash = (x) => (x === null || x === undefined || x === '') ? '-' : String(x);
+                const newPage = () => { doc.addPage(); doc.rect(0, 0, PAGE_W, 5, { fill: C.orange }); return 20; };
+
+                // Header
+                doc.rect(0, 0, PAGE_W, 5, { fill: C.orange });
+                drawLogo(doc, M, 16, 16);
+                doc.text(BUSINESS_INFO.name, M + 20, 23, { font: 'F2', size: 18, color: C.ink });
+                doc.text(BUSINESS_INFO.tagline, M + 20, 29, { size: 9.5, color: C.muted });
+                doc.text('INVOICE', RIGHT, 25, { font: 'F2', size: 26, color: C.orangeDark, align: 'right' });
+                doc.text('No. ' + data.number, RIGHT, 31.5, { font: 'F2', size: 9.5, color: C.text, align: 'right' });
+                doc.line(M, 39, RIGHT, 39, { color: C.light, width: 0.3 });
+
+                // Info pelanggan (kiri)
+                let yL = 48;
+                doc.text('DITAGIHKAN KEPADA', M, yL, { font: 'F2', size: 8, color: C.muted });
+                yL += 7;
+                wrap(dash(data.customer), 'F2', 13, 88).forEach(l => { doc.text(l, M, yL, { font: 'F2', size: 13, color: C.ink }); yL += 5.8; });
+
+                // Detail pesanan (kanan)
+                const mx = 118;
+                let yR = 48;
+                [['Tanggal Invoice', data.invoiceDate], ['Tanggal Pesanan', data.orderDate], ['Waktu Ambil/Kirim', data.orderTime], ['ID Pesanan', data.orderId]]
+                    .forEach(([k, val]) => {
+                        doc.text(k, mx, yR, { size: 9, color: C.muted });
+                        doc.text(dash(val), RIGHT, yR, { font: 'F2', size: 9, color: C.ink, align: 'right' });
+                        yR += 6.2;
+                    });
+                doc.text('Status', mx, yR, { size: 9, color: C.muted });
+                if (data.status) {
+                    const st = clean(data.status), sw = textWidth(st, 'F2', 8.5) + 6;
+                    doc.rect(RIGHT - sw, yR - 3.9, sw, 5.4, { stroke: [55,65,81], width: 0.35, radius: 2.7 });
+                    doc.text(st, RIGHT - sw / 2, yR, { font: 'F2', size: 8.5, color: C.ink, align: 'center' });
+                } else {
+                    doc.text('-', RIGHT, yR, { font: 'F2', size: 9, color: C.ink, align: 'right' });
+                }
+                yR += 6.2;
+
+                // Tabel produk
+                let y = Math.max(yL, yR) + 8;
+                y = drawTableHeader(doc, y);
+                data.items.forEach((it, idx) => {
+                    const nameLines = it.name ? wrap(it.name, 'F2', 9.5, COLS[1].w - PAD * 2) : ['Produk tidak tersedia (menu telah dihapus)'];
+                    const subLines = [];
+                    if (it.category) subLines.push(...wrap(it.category, 'F1', 8, COLS[1].w - PAD * 2));
+                    if (it.desc) subLines.push(...wrap(it.desc, 'F1', 8, COLS[1].w - PAD * 2));
+                    const rowH = 4 + nameLines.length * 4.4 + subLines.length * 3.8 + 2.5;
+                    if (y + rowH > BOTTOM) { y = drawTableHeader(doc, newPage()); }
+                    let ty = y + 6;
+                    doc.text(String(idx + 1), cellX(COLS[0]), ty, { size: 9.5, align: 'center' });
+                    doc.text(String(it.qty), cellX(COLS[2]), ty, { size: 9.5, align: 'center' });
+                    doc.text(money(it.unitPrice), cellX(COLS[3]), ty, { size: 9.5, align: 'right' });
+                    doc.text(money(it.subtotal), cellX(COLS[4]), ty, { font: 'F2', size: 9.5, align: 'right', color: C.ink });
+                    nameLines.forEach(l => { doc.text(l, cellX(COLS[1]), ty, { font: it.name ? 'F2' : 'F1', size: 9.5, color: it.name ? C.ink : C.muted }); ty += 4.4; });
+                    subLines.forEach(l => { doc.text(l, cellX(COLS[1]), ty - 0.4, { size: 8, color: C.muted }); ty += 3.8; });
+                    y += rowH;
+                    doc.line(M, y, RIGHT, y, { color: C.light, width: 0.3 });
+                });
+
+                // Total
+                if (y + 26 > BOTTOM) y = newPage();
+                const tx = 118;
+                y += 7;
+                doc.text('Subtotal', tx, y, { size: 9.5, color: C.muted });
+                doc.text(money(data.total), RIGHT, y, { font: 'F2', size: 9.5, color: C.ink, align: 'right' });
+                y += 4;
+                doc.rect(tx - 3, y, RIGHT - tx + 3, 11, { fill: C.cream, stroke: C.orange, width: 0.4, radius: 2 });
+                doc.text('Total Pembayaran', tx, y + 7, { font: 'F2', size: 10, color: C.ink });
+                doc.text(money(data.total), RIGHT - 3, y + 7.2, { font: 'F2', size: 13, color: C.brown, align: 'right' });
+                y += 11;
+
+                // Catatan
+                if (data.notes) {
+                    y += 10;
+                    if (y + 16 > BOTTOM) y = newPage();
+                    doc.text('CATATAN PESANAN', M, y, { font: 'F2', size: 8, color: C.muted });
+                    y += 3;
+                    let lines = wrap(data.notes, 'F1', 9.5, RIGHT - M - 10);
+                    while (lines.length) {
+                        const fit = Math.max(1, Math.floor((BOTTOM - y - 6) / 4.6));
+                        const chunk = lines.splice(0, fit);
+                        const h = chunk.length * 4.6 + 5;
+                        doc.rect(M, y, RIGHT - M, h, { stroke: C.light, width: 0.3, radius: 1.5 });
+                        doc.rect(M, y, 1.2, h, { fill: C.orange });
+                        let ly = y + 6;
+                        chunk.forEach(l => { doc.text(l, M + 5, ly, { size: 9.5 }); ly += 4.6; });
+                        y += h;
+                        if (lines.length) y = newPage();
+                    }
+                }
+
+                // Footer di setiap halaman
+                const total = doc.pages.length;
+                doc.pages.forEach((ops, i) => {
+                    doc.ops = ops;
+                    doc.line(M, PAGE_H - 18, RIGHT, PAGE_H - 18, { color: C.light, width: 0.3 });
+                    doc.text(`Terima kasih telah berbelanja di ${BUSINESS_INFO.name}.`, M, PAGE_H - 13, { size: 8, color: C.muted });
+                    doc.text(`Dicetak: ${data.printedAt}`, M, PAGE_H - 9, { size: 8, color: C.muted });
+                    doc.text(`${BUSINESS_INFO.name} - ${BUSINESS_INFO.tagline}`, RIGHT, PAGE_H - 13, { size: 8, color: C.muted, align: 'right' });
+                    doc.text(`Halaman ${i + 1} dari ${total}`, RIGHT, PAGE_H - 9, { size: 8, color: C.muted, align: 'right' });
+                });
+
+                return doc.toBlob(`Invoice ${data.number}`);
+            }
+
+            return { create };
+        })();
+
+        function invoiceFileName(data) {
+            const slug = String(data.customer || 'Pelanggan')
+                .normalize('NFD').replace(/[̀-ͯ]/g, '')
+                .replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'Pelanggan';
+            return `Invoice-Daily-Bread-${data.number}-${slug}.pdf`;
+        }
+
+        // --- Kontrol modal invoice ---
+        let currentInvoiceData = null;
+
+        function setInvoiceState(state, msg) {
+            const loading = document.getElementById('invoice-loading');
+            const wrap = document.getElementById('invoice-scale-wrap');
+            const alertBox = document.getElementById('invoice-alert');
+            loading.classList.toggle('hidden', state !== 'loading');
+            wrap.classList.toggle('hidden', state !== 'ready');
+            if (state === 'loading') document.getElementById('invoice-loading-msg').innerText = msg || 'Menyiapkan invoice...';
+            if (state === 'error') showInvoiceError(msg);
+            else alertBox.classList.add('hidden');
+        }
+
+        // Pesan ditampilkan di dalam modal invoice (tidak memakai toast global)
+        function showInvoiceMessage(msg, type = 'error') {
+            const box = document.getElementById('invoice-alert');
+            const ok = type === 'success';
+            box.className = `${ok ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-red-50 border-red-200 text-red-700'} border rounded-2xl px-4 py-3 text-xs font-medium flex items-start space-x-2.5`;
+            box.setAttribute('role', ok ? 'status' : 'alert');
+            document.getElementById('invoice-alert-icon').className = ok ? 'fa-solid fa-circle-check text-emerald-500 text-sm mt-0.5' : 'fa-solid fa-circle-exclamation text-red-500 text-sm mt-0.5';
+            document.getElementById('invoice-alert-msg').innerText = msg;
+            document.getElementById('invoice-body').scrollTop = 0;
+        }
+        function showInvoiceError(msg) { showInvoiceMessage(msg, 'error'); }
+
+        function fitInvoicePreview() {
+            const wrap = document.getElementById('invoice-scale-wrap');
+            const paper = document.getElementById('invoice-paper');
+            if (!wrap || wrap.classList.contains('hidden')) return;
+            const avail = wrap.parentElement.clientWidth - 24; // p-3 kiri + kanan
+            const scale = Math.min(1, avail / 794);
+            paper.style.transform = `scale(${scale})`;
+            wrap.style.width = (794 * scale) + 'px';
+            wrap.style.height = (paper.offsetHeight * scale) + 'px';
+        }
+
+        const invoiceResizeObserver = ('ResizeObserver' in window) ? new ResizeObserver(() => fitInvoicePreview()) : null;
+        window.addEventListener('resize', fitInvoicePreview);
+
+        function setDownloadBusy(busy) {
+            const btn = document.getElementById('invoice-download-btn');
+            btn.disabled = busy || !currentInvoiceData;
+            document.getElementById('invoice-download-icon').className = busy ? 'fa-solid fa-spinner fa-spin text-xs' : 'fa-solid fa-file-arrow-down text-xs';
+            document.getElementById('invoice-download-label').innerText = busy ? 'Membuat PDF...' : 'Download PDF';
+        }
+
+        function openInvoicePreview(orderId) {
+            currentInvoiceData = null;
+            document.getElementById('invoice-modal-subtitle').innerText = '';
+            document.getElementById('invoice-modal').classList.remove('hidden');
+            setDownloadBusy(false);
+            setInvoiceState('loading');
+
+            // Beri waktu 1 frame agar indikator loading tampil
+            setTimeout(() => {
+                try {
+                    const data = buildInvoiceData(orderId);
+                    const paper = document.getElementById('invoice-paper');
+                    paper.innerHTML = renderInvoiceHTML(data);
+                    currentInvoiceData = data;
+                    document.getElementById('invoice-modal-subtitle').innerText = `No. ${data.number}`;
+                    setInvoiceState('ready');
+                    setDownloadBusy(false);
+                    fitInvoicePreview();
+                    if (invoiceResizeObserver) invoiceResizeObserver.observe(paper);
+                } catch (err) {
+                    console.error(err);
+                    setInvoiceState('error', 'Gagal membuat invoice: ' + (err && err.message ? err.message : 'terjadi kesalahan tidak dikenal.'));
+                }
+            }, 60);
+        }
+
+        function closeInvoicePreview() {
+            document.getElementById('invoice-modal').classList.add('hidden');
+            if (invoiceResizeObserver) invoiceResizeObserver.disconnect();
+            currentInvoiceData = null;
+        }
+
+        function downloadCurrentInvoice() {
+            if (!currentInvoiceData) {
+                showInvoiceError('Invoice belum siap. Tutup lalu coba buka kembali.');
+                return;
+            }
+            const data = currentInvoiceData;
+            document.getElementById('invoice-alert').classList.add('hidden');
+            setDownloadBusy(true);
+            setTimeout(() => {
+                try {
+                    const blob = InvoicePDF.create(data);
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = invoiceFileName(data);
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    setTimeout(() => URL.revokeObjectURL(url), 10000);
+                    showInvoiceMessage(`Invoice berhasil diunduh: ${a.download}`, 'success');
+                } catch (err) {
+                    console.error(err);
+                    showInvoiceError('Gagal mengunduh invoice PDF: ' + (err && err.message ? err.message : 'terjadi kesalahan tidak dikenal.') + ' Silakan coba lagi.');
+                } finally {
+                    setDownloadBusy(false);
+                }
+            }, 60);
         }
 
         // Initial render on window load
