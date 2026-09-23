@@ -259,13 +259,10 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Kategori</label>
-                        <select id="menu-category" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-bakery-500 font-medium">
-                            <option value="Roti Artisanal">Roti Artisanal</option>
-                            <option value="Pastry & Croissant">Pastry & Croissant</option>
-                            <option value="Cake & Tart">Cake & Tart</option>
-                            <option value="Cookies & Snack">Cookies & Snack</option>
-                            <option value="Minuman">Minuman</option>
+                        <select id="menu-category" required onchange="document.getElementById('menu-category-error').classList.add('hidden')" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-bakery-500 font-medium">
+                            <!-- Opsi diisi dari PRODUCT_CATEGORIES -->
                         </select>
+                        <p id="menu-category-error" class="hidden text-[11px] text-red-600 font-medium mt-1">Kategori wajib dipilih.</p>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
@@ -332,14 +329,87 @@
         let privacyMode = false;
 
         // Default Menus
-        let menuItems = [
-            { id: 1, name: 'Sourdough Country Loaf', category: 'Roti Artisanal', hpp: 18000, price: 35000, desc: 'Classic fermented sourdough bread' },
-            { id: 2, name: 'Butter Croissant', category: 'Pastry & Croissant', hpp: 7500, price: 16000, desc: 'Flaky and buttery French pastry' },
-            { id: 3, name: 'Choco Lava Danish', category: 'Pastry & Croissant', hpp: 9000, price: 19000, desc: 'Rich chocolate pastry' },
-            { id: 4, name: 'Japanese Milk Bread', category: 'Roti Artisanal', hpp: 14000, price: 28000, desc: 'Soft and fluffy shokupan loaf' },
-            { id: 5, name: 'Almond Croissant', category: 'Pastry & Croissant', hpp: 11000, price: 24000, desc: 'Filled with almond cream and sliced almonds' },
-            { id: 6, name: 'Fudge Brownie Slice', category: 'Cake & Tart', hpp: 8000, price: 18000, desc: 'Dense dark chocolate fudge brownie' }
-        ];
+        // --- Kategori produk: nilai tersimpan stabil (key) + label tampilan ---
+        const PRODUCT_CATEGORIES = Object.freeze([
+            { key: 'cake_tart', label: 'Cake & Tart' },
+            { key: 'pastry',    label: 'Pastry' },
+            { key: 'brownies',  label: 'Brownies' }
+        ]);
+        const CATEGORY_KEYS = PRODUCT_CATEGORIES.map(c => c.key);
+        function isValidCategory(key) {
+            return CATEGORY_KEYS.includes(key);
+        }
+        function getCategoryLabel(key) {
+            const cat = PRODUCT_CATEGORIES.find(c => c.key === key);
+            return cat ? cat.label : null;
+        }
+
+        // Migrasi aman kategori lama (Roti Artisanal, Pastry & Croissant, dll.) -> kategori baru.
+        // Produk TIDAK dihapus. Jika tidak bisa dipetakan, category = null dan harus dipilih manual lewat Edit.
+        const LEGACY_CATEGORY_MAP = {
+            'cake & tart': 'cake_tart', 'cake': 'cake_tart', 'tart': 'cake_tart',
+            'pastry & croissant': 'pastry', 'pastry': 'pastry', 'croissant': 'pastry',
+            'brownies': 'brownies', 'brownie': 'brownies'
+        };
+        function guessCategoryFromName(name) {
+            const n = String(name || '').toLowerCase();
+            if (/brownie/.test(n)) return 'brownies';
+            if (/cake|tart/.test(n)) return 'cake_tart';
+            if (/croissant|danish|pastry|pain au|puff|strudel/.test(n)) return 'pastry';
+            return null;
+        }
+        function resolveLegacyCategory(item) {
+            const raw = String(item.category ?? '').trim();
+            if (isValidCategory(raw)) return raw;
+            if (guessCategoryFromName(item.name) === 'brownies') return 'brownies';
+            return LEGACY_CATEGORY_MAP[raw.toLowerCase()] || guessCategoryFromName(item.name) || null;
+        }
+        function migrateMenuCategories() {
+            let migrated = 0;
+            menuItems.forEach(m => {
+                if (isValidCategory(m.category)) return;
+                const next = resolveLegacyCategory(m);
+                if (m.category !== next) {
+                    m.legacyCategory = m.category; // simpan nilai lama sebagai jejak migrasi
+                    m.category = next;
+                    migrated++;
+                }
+            });
+            return migrated;
+        }
+
+        // Data contoh produk (ID tetap agar pesanan contoh tetap terhubung ke produk)
+        const SAMPLE_PRODUCTS = Object.freeze([
+            { id: 7, name: 'Chocolate Fudge Cake',     category: 'cake_tart', hpp: 120000, price: 220000, desc: 'Rich chocolate cake with creamy fudge frosting' },
+            { id: 5, name: 'Strawberry Shortcake',     category: 'cake_tart', hpp: 110000, price: 200000, desc: 'Soft vanilla cake with fresh strawberry and cream' },
+            { id: 1, name: 'Lemon Tart',               category: 'cake_tart', hpp: 18000,  price: 35000,  desc: 'Buttery tart shell with fresh lemon custard' },
+            { id: 2, name: 'Butter Croissant',         category: 'pastry',    hpp: 7500,   price: 16000,  desc: 'Flaky and buttery French pastry' },
+            { id: 3, name: 'Pain au Chocolat',         category: 'pastry',    hpp: 9000,   price: 19000,  desc: 'Buttery laminated pastry filled with chocolate' },
+            { id: 4, name: 'Cheese Danish',            category: 'pastry',    hpp: 10000,  price: 22000,  desc: 'Flaky Danish pastry with creamy cheese filling' },
+            { id: 6, name: 'Fudgy Chocolate Brownies', category: 'brownies',  hpp: 55000,  price: 95000,  desc: 'Rich and moist dark chocolate brownies' },
+            { id: 8, name: 'Walnut Brownies',          category: 'brownies',  hpp: 65000,  price: 110000, desc: 'Fudgy chocolate brownies topped with walnuts' },
+            { id: 9, name: 'Cheese Brownies',          category: 'brownies',  hpp: 60000,  price: 105000, desc: 'Chocolate brownies with a creamy cheese layer' }
+        ]);
+
+        // Data contoh hanya dibuat satu kali: dilewati jika produk dengan nama sama sudah ada.
+        let sampleProductsSeeded = false;
+        function seedSampleProducts() {
+            if (sampleProductsSeeded) return 0;
+            let added = 0;
+            SAMPLE_PRODUCTS.forEach(sample => {
+                const exists = menuItems.some(m => String(m.name || '').trim().toLowerCase() === sample.name.toLowerCase());
+                if (exists) return;
+                const idTaken = menuItems.some(m => m.id === sample.id);
+                menuItems.push({ ...sample, id: idTaken ? Date.now() + added : sample.id });
+                added++;
+            });
+            sampleProductsSeeded = true;
+            return added;
+        }
+
+        let menuItems = [];
+        migrateMenuCategories();
+        seedSampleProducts();
 
         // Default Bookings (including dates around today)
         const todayDateObj = new Date();
@@ -512,7 +582,7 @@
                             <span><i class="fa-solid fa-calendar-week text-bakery-500 mr-1.5"></i> Kalender 7 Hari Kedepan</span>
                             <span class="text-[10px] text-gray-400 font-normal">Geser untuk melihat</span>
                         </p>
-                        <div class="flex space-x-2 overflow-x-auto hide-scrollbar pb-1">
+                        <div id="home-calendar-scroll" class="flex space-x-2 overflow-x-auto hide-scrollbar pb-1">
             `;
 
             daysList.forEach(day => {
@@ -520,7 +590,7 @@
                 const isSelected = (day.dateStr === selectedDateFilter);
                 
                 html += `
-                    <div onclick="filterHomeDate('${day.dateStr}')" class="flex-shrink-0 w-16 py-3 px-1 rounded-2xl text-center cursor-pointer transition border ${day.isToday ? 'border-bakery-500' : 'border-gray-100'} ${isSelected ? 'bg-bakery-600 text-white shadow-md' : 'bg-gray-50/80 hover:bg-bakery-50 text-gray-800'}">
+                    <div onclick="filterHomeDate('${day.dateStr}')" data-date="${day.dateStr}" class="flex-shrink-0 w-16 py-3 px-1 rounded-2xl text-center cursor-pointer transition border ${day.isToday ? 'border-bakery-500' : 'border-gray-100'} ${isSelected ? 'bg-bakery-600 text-white shadow-md' : 'bg-gray-50/80 hover:bg-bakery-50 text-gray-800'}">
                         <p class="text-[10px] font-semibold uppercase ${isSelected ? 'text-bakery-100' : 'text-gray-500'}">${day.dayName}</p>
                         <p class="text-base font-extrabold my-0.5 ${isSelected ? 'text-white' : 'text-gray-900'}">${day.dayNum}</p>
                         <p class="text-[10px] ${isSelected ? 'text-bakery-100' : 'text-gray-400'}">${day.monthName}</p>
@@ -606,14 +676,45 @@
                 </div>
             `;
             container.innerHTML = html;
+            restoreHomeCalendarScroll();
         }
 
         let selectedDateFilter = todayStr;
+
+        // --- Posisi scroll horizontal kalender ---
+        // Home dirender ulang via innerHTML sehingga elemen kalender dibuat baru (scrollLeft kembali 0).
+        // Posisi terakhir disimpan di sini dan dipulihkan setelah setiap render.
+        let homeCalendarScrollLeft = 0;       // posisi awal = 0 (hari ini di paling kiri)
+        let homeCalendarRevealSelected = false; // true hanya saat pengguna mengganti tanggal terpilih
+
+        function restoreHomeCalendarScroll() {
+            const scroller = document.getElementById('home-calendar-scroll');
+            if (!scroller) return;
+            scroller.scrollLeft = homeCalendarScrollLeft;
+
+            // Auto-scroll hanya jika tanggal terpilih baru berubah DAN berada di luar area terlihat
+            if (homeCalendarRevealSelected) {
+                const active = scroller.querySelector(`[data-date="${selectedDateFilter}"]`);
+                if (active) {
+                    const box = scroller.getBoundingClientRect();
+                    const card = active.getBoundingClientRect();
+                    if (card.left < box.left) scroller.scrollLeft -= (box.left - card.left);
+                    else if (card.right > box.right) scroller.scrollLeft += (card.right - box.right);
+                }
+                homeCalendarRevealSelected = false;
+            }
+            homeCalendarScrollLeft = scroller.scrollLeft;
+            // Simpan setiap geseran manual pengguna
+            scroller.addEventListener('scroll', () => { homeCalendarScrollLeft = scroller.scrollLeft; }, { passive: true });
+        }
+
         function filterHomeDate(dateStr) {
+            if (dateStr !== selectedDateFilter) homeCalendarRevealSelected = true;
             selectedDateFilter = dateStr;
             renderCurrentTab();
         }
         function resetHomeDate() {
+            if (selectedDateFilter !== todayStr) homeCalendarRevealSelected = true;
             selectedDateFilter = todayStr;
             renderCurrentTab();
         }
@@ -678,8 +779,8 @@
                                 </div>
                             </div>
                             <div class="flex items-center justify-end space-x-2 pt-1 border-t border-gray-50">
-                                <button type="button" onclick="event.stopPropagation(); openInvoicePreview(${order.id})" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-bakery-100 text-gray-600 hover:text-bakery-700 flex items-center justify-center text-xs transition" title="Cetak Invoice" aria-label="Cetak Invoice">
-                                    <i class="fa-solid fa-print"></i>
+                                <button type="button" onclick="event.stopPropagation(); openInvoicePreview(${order.id})" class="px-3 py-1 bg-gray-100 hover:bg-bakery-100 text-gray-700 hover:text-bakery-700 rounded-xl text-xs font-semibold transition flex items-center space-x-1" title="Cetak Invoice" aria-label="Cetak Invoice">
+                                    <i class="fa-solid fa-print text-[10px]"></i><span>Invoice</span>
                                 </button>
                                 <button onclick="editBooking(${order.id})" class="px-3 py-1 bg-gray-100 hover:bg-bakery-100 text-gray-700 hover:text-bakery-700 rounded-xl text-xs font-semibold transition flex items-center space-x-1">
                                     <i class="fa-solid fa-pen text-[10px]"></i><span>Edit</span>
@@ -1198,12 +1299,13 @@
                     <div class="flex space-x-1.5 overflow-x-auto hide-scrollbar pb-1">
             `;
 
-            const categories = ['ALL', 'Roti Artisanal', 'Pastry & Croissant', 'Cake & Tart', 'Cookies & Snack', 'Minuman'];
+            if (settingMenuCategoryFilter !== 'ALL' && !isValidCategory(settingMenuCategoryFilter)) settingMenuCategoryFilter = 'ALL';
+            const categories = ['ALL', ...CATEGORY_KEYS];
             categories.forEach(cat => {
                 const isActive = settingMenuCategoryFilter === cat;
                 html += `
                     <button onclick="filterMenuCategory('${cat}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition border ${isActive ? 'bg-bakery-600 text-white border-bakery-600 shadow' : 'bg-white text-gray-600 border-gray-200 hover:bg-bakery-50'}">
-                        ${cat === 'ALL' ? 'Semua Kategori' : cat}
+                        ${cat === 'ALL' ? 'Semua Kategori' : getCategoryLabel(cat)}
                     </button>
                 `;
             });
@@ -1218,14 +1320,18 @@
             let filteredMenus = menuItems.filter(m => settingMenuCategoryFilter === 'ALL' || m.category === settingMenuCategoryFilter);
 
             filteredMenus.forEach(menu => {
-                const profitPerItem = menu.price - menu.hpp;
-                const marginPerItem = menu.price > 0 ? Math.round((profitPerItem / menu.price) * 100) : 0;
+                // Profit = Harga Jual − HPP ; Margin = Profit ÷ Harga Jual × 100% (0% jika harga jual 0)
+                const hppValue = Number(menu.hpp) || 0;
+                const priceValue = Number(menu.price) || 0;
+                const profitPerItem = priceValue - hppValue;
+                const marginPerItem = priceValue > 0 ? Math.round((profitPerItem / priceValue) * 100) : 0;
+                const categoryLabel = getCategoryLabel(menu.category);
 
                 html += `
                     <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 space-y-2.5 relative hover:border-bakery-300 transition">
                         <div class="flex justify-between items-start">
                             <div>
-                                <span class="text-[10px] font-bold text-bakery-700 bg-bakery-50 px-2 py-0.5 rounded-lg">${menu.category}</span>
+                                <span class="text-[10px] font-bold ${categoryLabel ? 'text-bakery-700 bg-bakery-50' : 'text-amber-800 bg-amber-100'} px-2 py-0.5 rounded-lg">${categoryLabel || 'Belum dikategorikan'}</span>
                                 <h4 class="font-bold text-gray-900 text-sm mt-1">${menu.name}</h4>
                                 <p class="text-[11px] text-gray-500 mt-0.5">${menu.desc || 'Tanpa deskripsi'}</p>
                             </div>
@@ -1250,7 +1356,7 @@
                             </div>
                             <div>
                                 <p class="text-[10px] text-gray-400 font-medium">Profit / Margin</p>
-                                <p class="text-xs font-bold text-emerald-600">+${formatIDR(profitPerItem)} (${marginPerItem}%)</p>
+                                <p class="text-xs font-bold ${profitPerItem < 0 ? 'text-red-600' : 'text-emerald-600'}">${profitPerItem < 0 ? '-' : '+'}${formatIDR(Math.abs(profitPerItem))} (${marginPerItem}%)</p>
                             </div>
                         </div>
                     </div>
@@ -1258,32 +1364,6 @@
             });
 
             html += `
-                    </div>
-
-                    <!-- Store Info / Settings Card -->
-                    <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 space-y-3 mt-6">
-                        <h3 class="text-xs font-bold text-gray-800 uppercase tracking-wide">
-                            <i class="fa-solid fa-store text-bakery-500 mr-1.5"></i> Informasi Toko & Data
-                        </h3>
-                        <div class="space-y-2 text-xs text-gray-600">
-                            <div class="flex justify-between py-1 border-b border-gray-50">
-                                <span class="font-medium text-gray-500">Nama Toko</span>
-                                <span class="font-bold text-gray-900">Daily Bread Bakery Studio</span>
-                            </div>
-                            <div class="flex justify-between py-1 border-b border-gray-50">
-                                <span class="font-medium text-gray-500">Mata Uang</span>
-                                <span class="font-bold text-gray-900">IDR (Rupiah)</span>
-                            </div>
-                            <div class="flex justify-between py-1">
-                                <span class="font-medium text-gray-500">Status Sistem</span>
-                                <span class="font-bold text-emerald-600 flex items-center"><i class="fa-solid fa-circle text-[8px] mr-1.5 text-emerald-500 animate-pulse"></i> Aktif & Tersimpan</span>
-                            </div>
-                        </div>
-                        <div class="pt-2">
-                            <button onclick="resetDefaultData()" class="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-bold text-xs transition">
-                                Reset Data Dummy Awal
-                            </button>
-                        </div>
                     </div>
                 </div>
             `;
@@ -1330,7 +1410,7 @@
                             <input type="radio" name="modal_menu_radio" value="${m.id}" ${isSelected ? 'checked' : ''} onchange="calculateModalTotal()" class="text-bakery-600 focus:ring-bakery-500">
                             <div>
                                 <p class="text-xs font-bold text-gray-900">${m.name}</p>
-                                <p class="text-[10px] text-gray-400">${m.category}</p>
+                                <p class="text-[10px] text-gray-400">${getCategoryLabel(m.category) || '-'}</p>
                             </div>
                         </div>
                         <span class="text-xs font-extrabold text-bakery-800">${formatIDR(m.price)}</span>
@@ -1426,11 +1506,19 @@
 
 
         // --- Modal Handlers for Menu CRUD ---
+        function populateCategorySelect(selectedKey) {
+            const select = document.getElementById('menu-category');
+            select.innerHTML = `<option value="" disabled>Pilih kategori</option>` +
+                PRODUCT_CATEGORIES.map(c => `<option value="${c.key}">${c.label}</option>`).join('');
+            select.value = isValidCategory(selectedKey) ? selectedKey : '';
+            document.getElementById('menu-category-error').classList.add('hidden');
+        }
+
         function openMenuModal() {
             document.getElementById('menu-modal-title').innerText = 'Tambah Menu Roti Baru';
             document.getElementById('edit-menu-id').value = '';
             document.getElementById('menu-name').value = '';
-            document.getElementById('menu-category').value = 'Roti Artisanal';
+            populateCategorySelect('');
             document.getElementById('menu-hpp').value = '';
             document.getElementById('menu-price').value = '';
             document.getElementById('menu-desc').value = '';
@@ -1449,6 +1537,14 @@
             const hpp = parseFloat(document.getElementById('menu-hpp').value);
             const price = parseFloat(document.getElementById('menu-price').value);
             const desc = document.getElementById('menu-desc').value;
+
+            // Validasi: kategori wajib salah satu dari PRODUCT_CATEGORIES
+            if (!isValidCategory(category)) {
+                document.getElementById('menu-category-error').classList.remove('hidden');
+                document.getElementById('menu-category').focus();
+                return;
+            }
+            if (!Number.isFinite(hpp) || !Number.isFinite(price) || hpp < 0 || price < 0) return;
 
             if (editId) {
                 const menu = menuItems.find(m => m.id == editId);
@@ -1484,7 +1580,7 @@
             document.getElementById('menu-modal-title').innerText = 'Edit Menu Roti';
             document.getElementById('edit-menu-id').value = menu.id;
             document.getElementById('menu-name').value = menu.name;
-            document.getElementById('menu-category').value = menu.category;
+            populateCategorySelect(menu.category); // kosong jika belum dikategorikan -> wajib dipilih
             document.getElementById('menu-hpp').value = menu.hpp;
             document.getElementById('menu-price').value = menu.price;
             document.getElementById('menu-desc').value = menu.desc || '';
@@ -1547,7 +1643,7 @@
             // Disusun sebagai array agar siap untuk pesanan multi-produk
             const items = [{
                 name: menu ? menu.name : null,
-                category: menu ? (menu.category || null) : null,
+                category: menu ? getCategoryLabel(menu.category) : null,
                 desc: menu ? (menu.desc || null) : null,
                 qty: qty,
                 unitPrice: unitPrice,
